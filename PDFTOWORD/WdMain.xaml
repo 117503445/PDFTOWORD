@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PDFTOWORD"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="PDF To WORD" MinHeight="450" MinWidth="800" Loaded="Window_Loaded" Height="450" Width="800">
     <Grid>
-        
+        <Button Name="BtnExplorer" Content="浏览"   Margin="50,20,50,350" MinHeight="30" Click="BtnExplorer_Click" VerticalContentAlignment="Center" VerticalAlignment="Top"  />
+        <ListBox Name="LstPPT" BorderThickness="1" BorderBrush="Black"  Margin="50,80,50,40" MinHeight="250" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch" SelectionChanged="LstPPT_SelectionChanged"/>
     </Grid>
 </Window>
