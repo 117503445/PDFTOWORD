@@ -1,4 +1,4 @@
-﻿<Window x:Class="PDFTOWORD.MainWindow"
+﻿<Window x:Class="PDFTOWORD.WdMain"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,11 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
-        </Grid.RowDefinitions>
-        <Button x:Name="BtnAddress" Content="开始转化" Click="BtnAddress_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Width="150" Height="70"  Grid.Row="2"  />
-        <TextBox Name="TbInfo"  Margin="10" />
+        
     </Grid>
 </Window>
