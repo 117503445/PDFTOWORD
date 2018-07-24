@@ -14,49 +14,45 @@ namespace Demo1
     class Program
     {
         /// <summary>
-        /// 横向连接多个图片,要求高度相同
+        /// 横向连接多个图片,要求尺寸相同
         /// </summary>
         /// <param name="imgs"></param>
         /// <returns></returns>
-        private Bitmap CombineImages(Bitmap[] imgs)
+        private static Bitmap CombineImages(List<Bitmap> imgs)
         {
             int totalWidth = 0;
-            for (int i = 0; i < imgs.Length; i++)
+            foreach (var item in imgs)
             {
-                totalWidth += imgs[i].Width;
-                if (imgs[i].Height != imgs[0].Height)
+                //Console.WriteLine(item.Width);
+                if (imgs[0].Size!=item.Size)
                 {
-                    throw new Exception("高度不同!");
+                    throw new Exception("不同尺寸的图片");
                 }
+                totalWidth += item.Width;
             }
-            Bitmap bitmap = new Bitmap(totalWidth, imgs[0].Height);
-            int twidth = 0;
-            for (int i = 0; i < imgs.Length; i++)
+            //Console.WriteLine(imgs[0].Height);
+            //Console.WriteLine(totalWidth);
+            Bitmap bitNew = new Bitmap(totalWidth, imgs[0].Height);
+            Graphics g = Graphics.FromImage(bitNew);//Create graphics object
+            int printedWidth = 0;
+            for (int i = 0; i < imgs.Count; i++)
             {
-                for (int x = 0; x < imgs[i].Width; x++)
-                {
-                    for (int y = 0; y < imgs[i].Height; y++)
-                    {
-                        try
-                        {
-                            bitmap.SetPixel(x + twidth, y, imgs[i].GetPixel(x, y));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                            TLib.Software.Logger.WriteException(ex);
-                        }
-                    }
-                }
-                twidth += imgs[i].Width;
+                g.DrawImage(imgs[i], imgs[0].Width*i, 0, imgs[0].Width, imgs[0].Height);
+                printedWidth += imgs[i].Width;
             }
-            Console.WriteLine("Fin");
-            return bitmap;
+            g.Dispose();
+            return bitNew;
         }
 
         static void Main(string[] args)
         {
-
+            List<Bitmap> b = new List<Bitmap>();
+            for (int i = 0; i < 20; i++)
+            {
+                b.Add(new Bitmap($@"C:\Users\117503445\Desktop\pics\{i}.jpg"));
+            }
+            var m = CombineImages(b);
+            m.Save(@"C:\Users\117503445\Desktop\3.jpg");
             Console.WriteLine("OJBK");
             Console.ReadLine();
         }

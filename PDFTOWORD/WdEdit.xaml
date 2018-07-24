@@ -18,7 +18,7 @@
         </StackPanel>
         <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"  PanningMode="HorizontalOnly" PreviewMouseWheel="Scv_PreviewMouseWheel" Grid.Column="1"  >
             <Grid Name="G">
-                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" ></Image>
+                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" />
             </Grid>
         </ScrollViewer>
     </Grid>

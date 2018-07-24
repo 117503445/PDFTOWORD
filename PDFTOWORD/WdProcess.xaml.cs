@@ -26,46 +26,7 @@ namespace PDFTOWORD
         public string Dir_SourcePdf { get; set; }
         public string Dir_WorkPlace { get; set; }
         public long PdfSize { get; set; }
-        /// <summary>
-        /// 横向连接多个图片,要求高度相同
-        /// </summary>
-        /// <param name="imgs"></param>
-        /// <returns></returns>
-        private Bitmap CombineImages(Bitmap[] imgs)
-        {
-            int totalWidth = 0;
-            for (int i = 0; i < imgs.Length; i++)
-            {
-                totalWidth += imgs[i].Width;
-                if (imgs[i].Height != imgs[0].Height)
-                {
-                    throw new Exception("高度不同!");
-                }
-            }
-            Bitmap bitmap = new Bitmap(totalWidth, imgs[0].Height);
-            int twidth = 0;
-            for (int i = 0; i < imgs.Length; i++)
-            {
-                for (int x = 0; x < imgs[i].Width; x++)
-                {
-                    for (int y = 0; y < imgs[i].Height; y++)
-                    {
-                        try
-                        {
-                            bitmap.SetPixel(x + twidth, y, imgs[i].GetPixel(x, y));
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                            TLib.Software.Logger.WriteException(ex);
-                        }
-                    }
-                }
-                twidth += imgs[i].Width;
-            }
-            Console.WriteLine("Fin");
-            return bitmap;
-        }
+
 
 
         public WdProcess(string dir_pdf)
@@ -106,11 +67,11 @@ namespace PDFTOWORD
                         totalWidth += p.Width;
                     }
                     TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
-                    var p1 = CombineImages(pics.ToArray());
+                    var p1 = ImageHelper.CombineImages(pics);
                     p1.Save($@"{Dir_WorkPlace}pdf.jpg");
 
                     TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false); });
-              
+
                 });
             }
             BtnEdit.Dispatcher.Invoke(() =>

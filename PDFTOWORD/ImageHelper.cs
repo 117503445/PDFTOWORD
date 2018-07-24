@@ -10,6 +10,38 @@ namespace PDFTOWORD
     public class ImageHelper
     {
         /// <summary>
+        /// 横向连接多个图片,要求尺寸相同
+        /// </summary>
+        /// <param name="imgs"></param>
+        /// <returns></returns>
+        public static Bitmap CombineImages(List<Bitmap> imgs)
+        {
+            int totalWidth = 0;
+            foreach (var item in imgs)
+            {
+                //Console.WriteLine(item.Width);
+                if (imgs[0].Size != item.Size)
+                {
+                    throw new Exception("不同尺寸的图片");
+                }
+                totalWidth += item.Width;
+            }
+            //Console.WriteLine(imgs[0].Height);
+            //Console.WriteLine(totalWidth);
+            Bitmap bitNew = new Bitmap(totalWidth, imgs[0].Height);
+            Graphics g = Graphics.FromImage(bitNew);//Create graphics object
+            int printedWidth = 0;
+            for (int i = 0; i < imgs.Count; i++)
+            {
+                g.DrawImage(imgs[i], imgs[0].Width * i, 0, imgs[0].Width, imgs[0].Height);
+                printedWidth += imgs[i].Width;
+            }
+            g.Dispose();
+            return bitNew;
+        }
+
+
+        /// <summary>
         /// 截取图片
         /// </summary>
         /// <param name="file_pic"></param>
