@@ -42,10 +42,8 @@ namespace PDFTOWORD
                     throw new Exception("高度不同!");
                 }
             }
-
             Bitmap bitmap = new Bitmap(totalWidth, imgs[0].Height);
             int twidth = 0;
-            Console.WriteLine("1");
             for (int i = 0; i < imgs.Length; i++)
             {
                 for (int x = 0; x < imgs[i].Width; x++)
@@ -61,11 +59,8 @@ namespace PDFTOWORD
                             Console.WriteLine(ex);
                             TLib.Software.Logger.WriteException(ex);
                         }
-
                     }
-
                 }
-
                 twidth += imgs[i].Width;
             }
             Console.WriteLine("Fin");
@@ -110,8 +105,6 @@ namespace PDFTOWORD
                         pics.Add(p);
                         totalWidth += p.Width;
                     }
-                    //Console.WriteLine(totalWidth);
-                    // Bitmap bitmap = new Bitmap(totalWidth, pics[0].Height);
                     TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
                     var p1 = CombineImages(pics.ToArray());
                     p1.Save($@"{Dir_WorkPlace}pdf.jpg");
