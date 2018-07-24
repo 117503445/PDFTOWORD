@@ -18,6 +18,8 @@ namespace Demo1
             DirectoryInfo info = new DirectoryInfo(dir_pic);
             var f = info.GetFiles();
 
+            var pics = from x in f orderby int.Parse(x.Name.Substring(0, x.Name.Length - 4)) select x;
+
             object path = file_doc;
             Object Nothing = Missing.Value;
             Word.Application wordApp = new Word.ApplicationClass
@@ -36,11 +38,13 @@ namespace Demo1
             //定义要插入的图片是否随Word文档一起保存
             Object saveWithDocument = true;              //默认
             //使用InlineShapes.AddPicture方法(【即“嵌入型”】)插入图片
-            for (int i = pics.Count - 1; i >= 0; i--)
-            {
-                System.Threading.Thread.Sleep(1000);
-                wordDoc.InlineShapes.AddPicture(pics[i], ref linkToFile, ref saveWithDocument, ref range);
-            }
+
+            //for (int i = pics.Count - 1; i >= 0; i--)
+            //{
+            //    System.Threading.Thread.Sleep(1000);
+            //    wordDoc.InlineShapes.AddPicture(pics[i], ref linkToFile, ref saveWithDocument, ref range);
+            //}
+
             //wordApp.Selection.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;//居中显示图片
             //设置图片宽高的绝对大小
 
@@ -79,11 +83,11 @@ namespace Demo1
             //    m.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
             //}
 
-
-
+            Console.WriteLine("213.pdf".Substring(0, "213.pdf".Length - 4));
             WriteWord($@"C:\Users\117503445\Desktop\pics\1.doc", @"C:\Users\117503445\Desktop\pics1");
             Console.WriteLine("OJBK");
             Console.ReadLine();
+            
         }
     }
 }

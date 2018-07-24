@@ -102,7 +102,7 @@ namespace PDFTOWORD
                 {
                     TbInfo.Text = "生成DOC中";
                 });
-                WordHelper.WriteWord($@"{App.Dir_Desktop}1.doc", Directory.GetFiles(dir_pic).ToList());
+                WordHelper.WriteWord($@"{App.Dir_Desktop}1.doc", dir_pic);
                 TbInfo.Dispatcher.Invoke(() =>
                 {
                     TbInfo.Text = "运行中";

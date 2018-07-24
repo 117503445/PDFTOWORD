@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -9,13 +10,22 @@ namespace PDFTOWORD
 {
     class WordHelper
     {
-        public static void WriteWord(string file_doc,List<string> pics)
+        public static void WriteWord(string file_doc, string dir_pic)
         {
+            Console.WriteLine(file_doc);
+            Console.WriteLine(dir_pic);
+
+            DirectoryInfo info = new DirectoryInfo(dir_pic);
+            var f = info.GetFiles();
+
+            var pics =( from x in f orderby int.Parse(x.Name.Substring(0, x.Name.Length - 4)) select x.FullName).ToList();//不然11.jpg在2.jpg前面
+
             object path = file_doc;
             Object Nothing = Missing.Value;
+
             Word.Application wordApp = new Word.ApplicationClass
             {
-                Visible = true//使文档不可见
+                Visible = false//使文档不可见
             }; //初始化
             object unite = Word.WdUnits.wdStory;
             Word.Document wordDoc = wordApp.Documents.Add(ref Nothing, ref Nothing, ref Nothing, ref Nothing);
@@ -29,9 +39,13 @@ namespace PDFTOWORD
             //定义要插入的图片是否随Word文档一起保存
             Object saveWithDocument = true;              //默认
             //使用InlineShapes.AddPicture方法(【即“嵌入型”】)插入图片
+
+
+           
+
             for (int i =pics.Count-1; i >=0; i--)
             {
-                System.Threading.Thread.Sleep(1000);
+                Console.WriteLine(pics[i]);
                 wordDoc.InlineShapes.AddPicture(pics[i], ref linkToFile, ref saveWithDocument, ref range);
             }
             //wordApp.Selection.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;//居中显示图片
