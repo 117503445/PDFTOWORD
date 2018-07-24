@@ -1,28 +1,14 @@
-﻿using Spire.Pdf;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Word = Microsoft.Office.Interop.Word;
-namespace Demo1
+
+namespace PDFTOWORD
 {
-
-    class Program
+    class WordHelper
     {
-        public static void EditImage(string file_pic, string file_save, int x1, int y1, int x2, int y2)
-        {
-            Bitmap bitmap = new Bitmap(file_pic);
-            Bitmap b = bitmap.Clone(new Rectangle(x1,y1,x2-x1,y2-y1),System.Drawing.Imaging.PixelFormat.Undefined);
-            b.Save(file_save);
-            bitmap.Dispose();
-            b.Dispose();
-        }
-
-        static void Main(string[] args)
+        public static void WriteWord()
         {
             object path = @"C:\Users\117503445\Desktop\1.doc";
             //string strContent;
@@ -76,8 +62,7 @@ namespace Demo1
             wordDoc.Close(ref Nothing, ref Nothing, ref Nothing);
             //关闭wordApp组件对象
             wordApp.Quit(ref Nothing, ref Nothing, ref Nothing);
-            Console.WriteLine("OJBK");
-            Console.ReadLine();
+
         }
     }
 }

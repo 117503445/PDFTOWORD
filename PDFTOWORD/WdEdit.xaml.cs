@@ -98,7 +98,11 @@ namespace PDFTOWORD
             {
                 Console.WriteLine("点不对应");
             }
-            var b
+            var bs = ImageHelper.EditImages(bitmap,points);
+            for (int i = 0; i < bs.Count; i++)
+            {
+                bs[i].Save($@"C:\Users\117503445\Desktop\1\{i}.jpg");
+            }
         }
     }
 
