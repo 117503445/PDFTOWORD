@@ -44,15 +44,7 @@ namespace PDFTOWORD
             PdfSize = fileInfo.Length;
             Dir_WorkPlace = App.Dir_File_PDF + $"{fileInfo.Name.Substring(0, fileInfo.Name.Length - 4)}-{PdfSize}/";
             Directory.CreateDirectory(Dir_WorkPlace);
-            if (File.Exists(Dir_WorkPlace + "pdf.jpg"))
-            {
-                BtnEdit.Dispatcher.Invoke(() =>
-                {
-                    BtnEdit.IsEnabled = true;
-                    BtnEdit.Content = "开始编辑";
-                });
-            }
-            else
+            if (!File.Exists(Dir_WorkPlace + "pdf.jpg"))
             {
                 await Task.Run(() =>
                 {
@@ -74,11 +66,9 @@ namespace PDFTOWORD
 
                 });
             }
-            BtnEdit.Dispatcher.Invoke(() =>
-            {
-                BtnEdit.IsEnabled = true;
-                BtnEdit.Content = "开始编辑";
-            });
+            BtnEdit.IsEnabled = true;
+            BtnEdit.Content = "开始编辑";
+
 
         }
         private string GetTbInfoText(string dir_SourcePdf, string strHandle, bool IsBuilt)
