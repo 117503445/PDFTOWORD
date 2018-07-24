@@ -18,7 +18,8 @@ namespace PDFTOWORD
         /// <param name="y1"></param>
         /// <param name="x2"></param>
         /// <param name="y2"></param>
-        public static Bitmap EditImage(string file_pic,int x1,int y1,int x2,int y2) {
+        public static Bitmap EditImage(string file_pic, int x1, int y1, int x2, int y2)
+        {
             Console.WriteLine(x1);
             Console.WriteLine(y1);
 
@@ -29,5 +30,28 @@ namespace PDFTOWORD
             bitmap.Dispose();
             return b;
         }
+
+        public
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TPoint
+    {
+        public TPoint(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
+
+        /// <summary>
+        /// X轴的比例
+        /// </summary>
+        public double X { get; }
+        /// <summary>
+        /// Y轴的比例
+        /// </summary>
+        public double Y { get; }
+
     }
 }

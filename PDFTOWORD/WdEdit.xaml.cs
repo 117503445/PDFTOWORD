@@ -20,6 +20,14 @@ namespace PDFTOWORD
     /// </summary>
     public partial class WdEdit : Window
     {
+        /// <summary>
+        /// 要操作的bitmap
+        /// </summary>
+        private Bitmap bitmap = new Bitmap(@"C:\Users\117503445\Desktop\1.jpg");
+        /// <summary>
+        /// 维护点集
+        /// </summary>
+        private List<TPoint> points = new List<TPoint>();
         public WdEdit()
         {
             InitializeComponent();
@@ -27,22 +35,15 @@ namespace PDFTOWORD
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
             Img.Source = new BitmapImage(new Uri(@"C:\Users\117503445\Desktop\1.jpg", UriKind.Absolute));//strImagePath 就绝对路径
         }
-        int i = 0;
-        System.Windows.Point point;
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            double xScale = 0;
-            double yScale = 0;
-            Bitmap bitmap = new Bitmap(@"C:\Users\117503445\Desktop\1.jpg");
-
-            xScale = Img.ActualWidth / bitmap.Width;
-            yScale = Img.ActualHeight / bitmap.Height;
-            Console.WriteLine(xScale);
-            //Bitmap b=
-            //System.Windows.Point p = new System.Windows.Point();
+            //double xScale = 0;
+            //double yScale = 0;
+            //xScale = Img.ActualWidth / bitmap.Width;
+            //yScale = Img.ActualHeight / bitmap.Height;
+            //Console.WriteLine(xScale);
             Line l = new Line();
             G.Children.Add(l);
             l.X1 = e.GetPosition(Img).X;
@@ -52,19 +53,22 @@ namespace PDFTOWORD
             l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
             l.StrokeThickness = 10;
             Panel.SetZIndex(l, 2);
-            Console.WriteLine(e.GetPosition(Img));
-            if (i == 0)
-            {
-                point = e.GetPosition(Img);
-            }
-            i += 1;
-            if (i == 2)
-            {
-                var p1 = point;
-                var p2 = e.GetPosition(Img);
-                var b = ImageHelper.EditImage(@"C:\Users\117503445\Desktop\1.jpg", (int)(p1.X / xScale), (int)(p1.Y / yScale), (int)(p2.X / xScale), (int)(p2.Y / yScale));
-                b.Save(@"C:\Users\117503445\Desktop\2.jpg");
-            }
+
+            points.Add(new TPoint(e.GetPosition(Img).X/Img.ActualWidth, e.GetPosition(Img).Y/Img.ActualHeight));
+            Console.WriteLine(e.GetPosition(Img).X);
+            Console.WriteLine(e.GetPosition(Img).Y);
+            //if (i == 0)
+            //{
+            //    point = e.GetPosition(Img);
+            //}
+            //i += 1;
+            //if (i == 2)
+            //{
+            //    var p1 = point;
+            //    var p2 = e.GetPosition(Img);
+            //    var b = ImageHelper.EditImage(@"C:\Users\117503445\Desktop\1.jpg", (int)(p1.X / xScale), (int)(p1.Y / yScale), (int)(p2.X / xScale), (int)(p2.Y / yScale));
+            //    b.Save(@"C:\Users\117503445\Desktop\2.jpg");
+            //}
         }
 
         /// <summary>
@@ -87,26 +91,15 @@ namespace PDFTOWORD
             }
             e.Handled = true;
         }
-    }
-    /// <summary>
-    /// 
-    /// </summary>
-    public class TPoint
-    {
-        /// <summary>
-        /// p.x/pic.width
-        /// </summary>
-        public double X { get; }
-        /// <summary>
-        /// p.y/pic.height
-        /// </summary>
-        public double Y { get; }
 
-        public TPoint(double px, double py)
+        private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            X = px / PicSize.Width;
-            Y = py / PicSize.Height;
+            if (points.Count%2!=0)
+            {
+                Console.WriteLine("点不对应");
+            }
+            var b
         }
-        public System.Drawing.Size PicSize { get; set; }
     }
+
 }

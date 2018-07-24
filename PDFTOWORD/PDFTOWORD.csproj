@@ -145,6 +145,7 @@
     <Content Include="DLL\O2S.Components.PDFRender4NET.dll" />
     <Content Include="DLL\TLib.dll" />
     <Content Include="DLL\TLib.pdb" />
+    <Resource Include="Help\XY轴.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
