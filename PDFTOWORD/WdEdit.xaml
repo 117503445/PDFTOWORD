@@ -7,8 +7,11 @@
         mc:Ignorable="d"
         Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" >
-            <Image Name="Img" ></Image>
+        <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" >
+            <Grid Name="G">
+                <Image Name="Img" MouseDown="Img_MouseDown" ></Image>
+            </Grid>
+            
         </ScrollViewer>
     </Grid>
 </Window>

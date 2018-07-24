@@ -13,21 +13,18 @@ namespace Demo1
 
     class Program
     {
-        private Bitmap CombineImages(Bitmap[] imgs)
+        public static void EditImage(string file_pic, string file_save, int x1, int y1, int x2, int y2)
         {
-
-            int totalWidth = 0;
-            foreach (var item in imgs)
-            {
-                totalWidth += item.Width;
-            }
-
+            Bitmap bitmap = new Bitmap(file_pic);
+            Bitmap b = bitmap.Clone(new Rectangle(x1,y1,x2-x1,y2-y1),System.Drawing.Imaging.PixelFormat.Undefined);
+            b.Save(file_save);
+            bitmap.Dispose();
+            b.Dispose();
         }
-
         static void Main(string[] args)
         {
-            string a = "123321.pdf";
-            Console.WriteLine(a.Substring(0, a.Length - 4));
+            EditImage(@"C:\Users\117503445\Desktop\1.jpg", @"C:\Users\117503445\Desktop\2.jpg",10,10,10000,1000);
+            //Console.WriteLine(a.Substring(0, a.Length - 4));
             return;
             object path = @"C:\Users\117503445\Desktop\1.doc";
             //string strContent;
