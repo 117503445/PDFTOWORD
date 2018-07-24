@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
+using System.Windows.Threading;
 
 namespace PDFTOWORD
 {
@@ -37,24 +38,46 @@ namespace PDFTOWORD
             InitializeComponent();
             bitmap = new Bitmap(file_img);
             Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
+
+            DispatcherTimer timer = new DispatcherTimer()
+            {
+                IsEnabled = true,
+                Interval = TimeSpan.FromMilliseconds(20)
+            };
+            timer.Tick += (s, e) => {
+                if (Mouse.GetPosition(GMain).X>=50)
+                {
+                    l1.Visibility = Visibility.Visible;
+                    l2.Visibility = Visibility.Visible;
+                    l1.X1 = 0;
+                    l1.Y1 = Mouse.GetPosition(GMain).Y;
+                    l1.X2 = bitmap.Width;
+                    l1.Y2 = Mouse.GetPosition(GMain).Y;
+
+                    l2.X1 = Mouse.GetPosition(GMain).X - 50;
+                    l2.Y1 = 0;
+                    l2.X2 = Mouse.GetPosition(GMain).X - 50;
+                    l2.Y2 = bitmap.Height;
+                }
+                else
+                {
+                    l1.Visibility = Visibility.Hidden;
+                    l2.Visibility = Visibility.Hidden;
+                }
+            };
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+            G.Children.Add(l1);
+            G.Children.Add(l2);
+            Panel.SetZIndex(l1, 3);
+            Panel.SetZIndex(l2, 3);
         }
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Line l = new Line();
-            G.Children.Add(l);
-            l.X1 = e.GetPosition(Img).X;
-            l.X2 = e.GetPosition(Img).X + 100;
-            l.Y1 = e.GetPosition(Img).Y;
-            l.Y2 = e.GetPosition(Img).Y + 100;
-            l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            l.StrokeThickness = 10;
-            Panel.SetZIndex(l, 2);
-            points.Add(new TPoint(e.GetPosition(Img).X / Img.ActualWidth, e.GetPosition(Img).Y / Img.ActualHeight));
+            
         }
 
         /// <summary>
@@ -65,15 +88,17 @@ namespace PDFTOWORD
         private void Scv_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             ScrollViewer sv = sender as ScrollViewer;
-            if (e.Delta > 0)
+            for (int i = 0; i < 6; i++)
             {
-                sv.LineLeft();
-                sv.LineLeft();
-            }
-            else
-            {
-                sv.LineRight();
-                sv.LineRight();
+                if (e.Delta > 0)
+                {
+                    sv.LineLeft();
+                }
+                else
+                {
+                    sv.LineRight();
+                }
+
             }
             e.Handled = true;
         }
@@ -91,8 +116,16 @@ namespace PDFTOWORD
                 {
                     TbInfo.Text = "切割图片中";
                 });
+                BtnSave.Dispatcher.Invoke(() =>
+                {
+                    BtnSave.IsEnabled = false;
+                });
                 var bs = ImageHelper.EditImages(bitmap, points);
-                string dir_pic = Dir_WorkPlace+@"pics\";
+                string dir_pic = Dir_WorkPlace + @"pics\";
+                if (Directory.Exists(dir_pic))
+                {
+                    Directory.Delete(dir_pic, true);
+                }
                 Directory.CreateDirectory(dir_pic);
                 for (int i = 0; i < bs.Count; i++)
                 {
@@ -108,17 +141,61 @@ namespace PDFTOWORD
                     TbInfo.Text = "运行中";
                 });
             });
-
+            BtnSave.IsEnabled = true;
         }
 
+        private Line l1 = new Line()
+        {
+            Visibility = Visibility.Collapsed,
+            Stroke = System.Windows.Media.Brushes.Blue,
+            StrokeThickness = 2,Opacity=0.3
+        };//鼠标指示,横
+        private Line l2 = new Line()
+        {
+            Visibility = Visibility.Collapsed,
+            Stroke = System.Windows.Media.Brushes.Blue,
+            StrokeThickness = 2,
+            Opacity = 0.3
+        };//鼠标指示,竖
         private void BtnUndo_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
+        private void Img_MouseMove(object sender, MouseEventArgs e)
+        {
+           
 
 
+        }
 
+        private void Img_MouseLeave(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        private void G_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Ellipse ep = new Ellipse();
+            ep.Margin = new Thickness(e.GetPosition(Img).X, e.GetPosition(Img).Y,110,110);
+            ep.Width = 2;
+            ep.Height = 2;
+            ep.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+            ep.StrokeThickness = 5;
+            G.Children.Add(ep);
+            Panel.SetZIndex(ep, 2);
+
+            //Line l = new Line();
+            //G.Children.Add(l);
+            //l.X1 = e.GetPosition(Img).X;
+            //l.X2 = e.GetPosition(Img).X ;
+            //l.Y1 = e.GetPosition(Img).Y;
+            //l.Y2 = e.GetPosition(Img).Y ;
+            //l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
+            //l.StrokeThickness = 10;
+            //Panel.SetZIndex(l, 2);
+            points.Add(new TPoint(e.GetPosition(Img).X / Img.ActualWidth, e.GetPosition(Img).Y / Img.ActualHeight));
+        }
     }
 
 }

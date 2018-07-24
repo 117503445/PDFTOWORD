@@ -79,8 +79,9 @@ namespace PDFTOWORD
         private string GetTbInfoText(string dir_SourcePdf, string strHandle, bool IsBuilt)
         {
             return $"正在处理的PDF文件路径:{dir_SourcePdf + NewLine}" +
-             $"预处理状态:{(strHandle) + NewLine}" +
-             $"是否生成过了DOC:{(IsBuilt ? "生成过了" : "未生成")}";
+             $"预处理状态:{(strHandle) + NewLine}";
+            //TODO 修改参数
+            //$"是否生成过了DOC:{(IsBuilt ? "生成过了" : "未生成")}";
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)

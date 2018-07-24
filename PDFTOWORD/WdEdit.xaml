@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PDFTOWORD"
         mc:Ignorable="d"
         Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded">
-    <Grid>
+    <Grid Name="GMain">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
             <ColumnDefinition />
@@ -17,8 +17,8 @@
             <TextBlock Name="TbInfo" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center">运行中</TextBlock>
         </StackPanel>
         <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"  PanningMode="HorizontalOnly" PreviewMouseWheel="Scv_PreviewMouseWheel" Grid.Column="1"  >
-            <Grid Name="G">
-                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" />
+            <Grid Name="G" MouseDown="G_MouseDown">
+                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" MouseMove="Img_MouseMove" MouseLeave="Img_MouseLeave" />
             </Grid>
         </ScrollViewer>
     </Grid>
