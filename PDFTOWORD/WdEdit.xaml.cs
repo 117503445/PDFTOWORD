@@ -67,11 +67,14 @@ namespace PDFTOWORD
             }
         }
 
-
+        /// <summary>
+        /// 使ScrollViewer支持横向滚动
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Scv_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             ScrollViewer sv = sender as ScrollViewer;
-            //move twice make it flexible
             if (e.Delta > 0)
             {
                 sv.LineLeft();

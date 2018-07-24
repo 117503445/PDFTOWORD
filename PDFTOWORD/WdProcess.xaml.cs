@@ -106,18 +106,23 @@ namespace PDFTOWORD
                     pics.Add(p);
                     totalWidth += p.Width;
                 }
-                Console.WriteLine(totalWidth);
+                //Console.WriteLine(totalWidth);
                 // Bitmap bitmap = new Bitmap(totalWidth, pics[0].Height);
+                TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
                 var p1 = CombineImages(pics.ToArray());
                 p1.Save(@"C:\Users\117503445\Desktop\1.jpg");
 
-                for (int i = 0; i < pics.Count; i++)
-                {
-                    Console.WriteLine(i);
-                    pics[i].Save($@"C:\Users\117503445\Desktop\pics\{i}.jpg");
-                }
+                //for (int i = 0; i < pics.Count; i++)
+                //{
+                //    Console.WriteLine(i);
+                //    pics[i].Save($@"C:\Users\117503445\Desktop\pics\{i}.jpg");
+                //}
 
                 TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false); });
+                BtnEdit.Dispatcher.Invoke(()=> {
+                    BtnEdit.IsEnabled = true;
+                    BtnEdit.Content = "开始编辑";
+                });
             });
         }
         private string GetTbInfoText(string dir_SourcePdf, string strHandle, bool IsBuilt)
