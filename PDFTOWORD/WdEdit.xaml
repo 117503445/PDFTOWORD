@@ -7,9 +7,9 @@
         mc:Ignorable="d"
         Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded">
     <Grid>
-        <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" >
+        <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"  PanningMode="HorizontalOnly" PreviewMouseWheel="Scv_PreviewMouseWheel"  >
             <Grid Name="G">
-                <Image Name="Img" MouseDown="Img_MouseDown" ></Image>
+                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" ></Image>
             </Grid>
             
         </ScrollViewer>

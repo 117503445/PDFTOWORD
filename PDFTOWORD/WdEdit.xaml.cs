@@ -37,6 +37,7 @@ namespace PDFTOWORD
             double xScale = 0;
             double yScale = 0;
             Bitmap bitmap = new Bitmap(@"C:\Users\117503445\Desktop\1.jpg");
+
             xScale = Img.ActualWidth / bitmap.Width;
             yScale = Img.ActualHeight / bitmap.Height;
             Console.WriteLine(xScale);
@@ -52,20 +53,57 @@ namespace PDFTOWORD
             l.StrokeThickness = 10;
             Panel.SetZIndex(l, 2);
             Console.WriteLine(e.GetPosition(Img));
-            if (i==0)
+            if (i == 0)
             {
-                point= e.GetPosition(Img);
+                point = e.GetPosition(Img);
             }
             i += 1;
             if (i == 2)
             {
                 var p1 = point;
                 var p2 = e.GetPosition(Img);
-                Console.WriteLine("111111");
-                
                 var b = ImageHelper.EditImage(@"C:\Users\117503445\Desktop\1.jpg", (int)(p1.X / xScale), (int)(p1.Y / yScale), (int)(p2.X / xScale), (int)(p2.Y / yScale));
                 b.Save(@"C:\Users\117503445\Desktop\2.jpg");
             }
         }
+
+
+        private void Scv_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer sv = sender as ScrollViewer;
+            //move twice make it flexible
+            if (e.Delta > 0)
+            {
+                sv.LineLeft();
+                sv.LineLeft();
+            }
+            else
+            {
+                sv.LineRight();
+                sv.LineRight();
+            }
+            e.Handled = true;
+        }
+    }
+    /// <summary>
+    /// 
+    /// </summary>
+    public class TPoint
+    {
+        /// <summary>
+        /// p.x/pic.width
+        /// </summary>
+        public double X { get; }
+        /// <summary>
+        /// p.y/pic.height
+        /// </summary>
+        public double Y { get; }
+
+        public TPoint(double px, double py)
+        {
+            X = px / PicSize.Width;
+            Y = py / PicSize.Height;
+        }
+        public System.Drawing.Size PicSize { get; set; }
     }
 }
