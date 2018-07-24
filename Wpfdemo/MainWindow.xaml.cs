@@ -23,11 +23,11 @@ namespace Wpfdemo
         public MainWindow()
         {
             InitializeComponent();
+            Img1.Source = new BitmapImage(new Uri(@"C:\Users\117503445\Desktop\pics\1.jpg", UriKind.Absolute));
+            Img2.Source = new BitmapImage(new Uri(@"C:\Users\117503445\Desktop\pics\2.jpg", UriKind.Absolute));
+            Img3.Source = new BitmapImage(new Uri(@"C:\Users\117503445\Desktop\pics\3.jpg", UriKind.Absolute));
+            Img4.Source = new BitmapImage(new Uri(@"C:\Users\117503445\Desktop\pics\4.jpg", UriKind.Absolute));
         }
 
-        private void ScrollViewer_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            Console.WriteLine(e.Delta);
-        }
     }
 }
