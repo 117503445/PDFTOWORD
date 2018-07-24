@@ -30,7 +30,7 @@ namespace Demo1
                 }
                 totalWidth += item.Width;
             }
-            //Console.WriteLine(imgs[0].Height);
+            Console.WriteLine(imgs[0].Width);
             //Console.WriteLine(totalWidth);
             Bitmap bitNew = new Bitmap(totalWidth, imgs[0].Height);
             Graphics g = Graphics.FromImage(bitNew);//Create graphics object
@@ -47,12 +47,12 @@ namespace Demo1
         static void Main(string[] args)
         {
             List<Bitmap> b = new List<Bitmap>();
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 60; i++)
             {
                 b.Add(new Bitmap($@"C:\Users\117503445\Desktop\pics\{i}.jpg"));
             }
             var m = CombineImages(b);
-            m.Save(@"C:\Users\117503445\Desktop\3.jpg");
+            m.Save(@"C:\Users\117503445\Desktop\3.png", System.Drawing.Imaging.ImageFormat.Png);
             Console.WriteLine("OJBK");
             Console.ReadLine();
         }

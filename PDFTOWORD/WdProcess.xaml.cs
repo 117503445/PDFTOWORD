@@ -50,13 +50,14 @@ namespace PDFTOWORD
                 {
                     var pdf = PDFFile.Open(Dir_SourcePdf);
                     List<Bitmap> pics = new List<Bitmap>();
-                    int totalWidth = 0;
                     for (int i = 0; i < pdf.PageCount; i++)
                     {
                         TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, $"{i + 1}/{pdf.PageCount}", false); });
                         var p = pdf.GetPageImage(i, 150);
                         pics.Add(p);
-                        totalWidth += p.Width;
+                        string dir_temp = Dir_WorkPlace + "temp/";
+                        Directory.CreateDirectory(dir_temp);
+                        p.Save($@"{dir_temp}{i}.jpg");
                     }
                     TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
                     var p1 = ImageHelper.CombineImages(pics);
