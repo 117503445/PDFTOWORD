@@ -15,7 +15,7 @@ namespace PDFTOWORD
             Object Nothing = Missing.Value;
             Word.Application wordApp = new Word.ApplicationClass
             {
-                Visible = false//使文档不可见
+                Visible = true//使文档不可见
             }; //初始化
             object unite = Word.WdUnits.wdStory;
             Word.Document wordDoc = wordApp.Documents.Add(ref Nothing, ref Nothing, ref Nothing, ref Nothing);
@@ -31,6 +31,7 @@ namespace PDFTOWORD
             //使用InlineShapes.AddPicture方法(【即“嵌入型”】)插入图片
             for (int i =pics.Count-1; i >=0; i--)
             {
+                System.Threading.Thread.Sleep(1000);
                 wordDoc.InlineShapes.AddPicture(pics[i], ref linkToFile, ref saveWithDocument, ref range);
             }
             //wordApp.Selection.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;//居中显示图片

@@ -61,15 +61,19 @@ namespace PDFTOWORD
                     }
                     TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
                     var p1 = ImageHelper.CombineImages(pics);
-                    p1.Save($@"{Dir_WorkPlace}pdf.jpg");
+                    using (FileStream stream = File.Create($@"{Dir_WorkPlace}pdf.jpg"))
+                    {
+                        p1.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
+                    }//使用流进行保存,防止大小宽度超过65536导致报错
 
-                    TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false); });
+                    p1.Dispose();
+                    pics.ForEach(item => item.Dispose());
 
                 });
             }
             BtnEdit.IsEnabled = true;
             BtnEdit.Content = "开始编辑";
-
+            TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false);
 
         }
         private string GetTbInfoText(string dir_SourcePdf, string strHandle, bool IsBuilt)
