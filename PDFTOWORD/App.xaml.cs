@@ -19,6 +19,7 @@ namespace PDFTOWORD
         public static string Dir_APP { get; set; } = AppDomain.CurrentDomain.BaseDirectory;
         public static string Dir_File { get; set; } = Dir_APP + "File/";
         public static string Dir_File_PDF { get; set; } = Dir_File + "PDF/";
+        public static string Dir_Desktop { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)+"/";
         public static string dir_LstPaths = Dir_File + "LstPaths.xml";
         public static BindingList<string> LstPaths { get; set; }
         private void Application_Startup(object sender, StartupEventArgs e)
@@ -34,6 +35,9 @@ namespace PDFTOWORD
             {
                 LstPaths = new BindingList<string>();
             }
+#if !DEBUG
+            WPF_ExpectionHandler.HandleExpection(Current, AppDomain.CurrentDomain);
+#endif
         }
         private void Application_Exit(object sender, ExitEventArgs e)
         {

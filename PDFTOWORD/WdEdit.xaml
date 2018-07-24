@@ -13,16 +13,13 @@
         </Grid.ColumnDefinitions>
         <StackPanel>
             <Button Name="BtnSave" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE792;" FontFamily="Segoe MDL2 Assets" FontSize="21" Click="BtnSave_Click"></Button>
-            <Button Name="BtnUndo" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE7A7;" FontFamily="Segoe MDL2 Assets" FontSize="21"></Button>
+            <Button Name="BtnUndo" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE7A7;" FontFamily="Segoe MDL2 Assets" FontSize="21" Click="BtnUndo_Click"></Button>
+            <TextBlock Name="TbInfo" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center">运行中</TextBlock>
         </StackPanel>
-       
-        
         <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"  PanningMode="HorizontalOnly" PreviewMouseWheel="Scv_PreviewMouseWheel" Grid.Column="1"  >
-            
             <Grid Name="G">
                 <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" ></Image>
             </Grid>
-
         </ScrollViewer>
     </Grid>
 </Window>

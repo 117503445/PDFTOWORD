@@ -54,6 +54,11 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>DLL\Microsoft.Office.Interop.Word.dll</HintPath>
+    </Reference>
     <Reference Include="O2S.Components.PDFRender4NET, Version=2.4.3.0, Culture=neutral, PublicKeyToken=9ffe591c3484001c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>DLL\O2S.Components.PDFRender4NET.dll</HintPath>
@@ -89,6 +94,7 @@
     <Compile Include="WdProcess.xaml.cs">
       <DependentUpon>WdProcess.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WordHelper.cs" />
     <Compile Include="Work.cs" />
     <Page Include="WdEdit.xaml">
       <SubType>Designer</SubType>
@@ -142,6 +148,7 @@
     <Resource Include="Help\OLD.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DLL\Microsoft.Office.Interop.Word.dll" />
     <Content Include="DLL\O2S.Components.PDFRender4NET.dll" />
     <Content Include="DLL\TLib.dll" />
     <Content Include="DLL\TLib.pdb" />

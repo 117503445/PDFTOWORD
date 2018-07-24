@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.IO;
 
 namespace PDFTOWORD
 {
@@ -23,27 +24,24 @@ namespace PDFTOWORD
         /// <summary>
         /// 要操作的bitmap
         /// </summary>
-        private Bitmap bitmap = new Bitmap(@"C:\Users\117503445\Desktop\1.jpg");
+        private Bitmap bitmap;
         /// <summary>
         /// 维护点集
         /// </summary>
         private List<TPoint> points = new List<TPoint>();
-        public WdEdit()
+        public WdEdit(string file_img)
         {
             InitializeComponent();
+            bitmap = new Bitmap(file_img);
+            Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Img.Source = new BitmapImage(new Uri(@"C:\Users\117503445\Desktop\1.jpg", UriKind.Absolute));//strImagePath 就绝对路径
+            
         }
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //double xScale = 0;
-            //double yScale = 0;
-            //xScale = Img.ActualWidth / bitmap.Width;
-            //yScale = Img.ActualHeight / bitmap.Height;
-            //Console.WriteLine(xScale);
             Line l = new Line();
             G.Children.Add(l);
             l.X1 = e.GetPosition(Img).X;
@@ -53,22 +51,7 @@ namespace PDFTOWORD
             l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
             l.StrokeThickness = 10;
             Panel.SetZIndex(l, 2);
-
-            points.Add(new TPoint(e.GetPosition(Img).X/Img.ActualWidth, e.GetPosition(Img).Y/Img.ActualHeight));
-            Console.WriteLine(e.GetPosition(Img).X);
-            Console.WriteLine(e.GetPosition(Img).Y);
-            //if (i == 0)
-            //{
-            //    point = e.GetPosition(Img);
-            //}
-            //i += 1;
-            //if (i == 2)
-            //{
-            //    var p1 = point;
-            //    var p2 = e.GetPosition(Img);
-            //    var b = ImageHelper.EditImage(@"C:\Users\117503445\Desktop\1.jpg", (int)(p1.X / xScale), (int)(p1.Y / yScale), (int)(p2.X / xScale), (int)(p2.Y / yScale));
-            //    b.Save(@"C:\Users\117503445\Desktop\2.jpg");
-            //}
+            points.Add(new TPoint(e.GetPosition(Img).X / Img.ActualWidth, e.GetPosition(Img).Y / Img.ActualHeight));
         }
 
         /// <summary>
@@ -92,18 +75,45 @@ namespace PDFTOWORD
             e.Handled = true;
         }
 
-        private void BtnSave_Click(object sender, RoutedEventArgs e)
+        private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (points.Count%2!=0)
+            await Task.Run(() =>
             {
-                Console.WriteLine("点不对应");
-            }
-            var bs = ImageHelper.EditImages(bitmap,points);
-            for (int i = 0; i < bs.Count; i++)
-            {
-                bs[i].Save($@"C:\Users\117503445\Desktop\1\{i}.jpg");
-            }
+                if (points.Count % 2 != 0)
+                {
+                    Console.WriteLine("点不对应");
+                    return;
+                }
+                TbInfo.Dispatcher.Invoke(() =>
+                {
+                    TbInfo.Text = "切割图片中";
+                });
+                var bs = ImageHelper.EditImages(bitmap, points);
+                for (int i = 0; i < bs.Count; i++)
+                {
+                    bs[i].Save($@"{App.Dir_Desktop}1\{i}.jpg");
+                }
+                TbInfo.Dispatcher.Invoke(() =>
+                {
+                    TbInfo.Text = "生成DOC中";
+                });
+                WordHelper.WriteWord($@"{App.Dir_Desktop}1.doc", Directory.GetFiles($@"{App.Dir_Desktop}1\").ToList());
+                TbInfo.Dispatcher.Invoke(() =>
+                {
+                    TbInfo.Text = "运行中";
+                });
+            });
+
         }
+
+        private void BtnUndo_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+
+
     }
 
 }
