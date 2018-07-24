@@ -24,6 +24,7 @@ namespace PDFTOWORD
     public partial class WdProcess : Window
     {
         public string Dir_SourcePdf { get; set; }
+        public string Dir_WorkPlace { get; set; }
         public long PdfSize { get; set; }
         /// <summary>
         /// 横向连接多个图片,要求高度相同
@@ -36,13 +37,13 @@ namespace PDFTOWORD
             for (int i = 0; i < imgs.Length; i++)
             {
                 totalWidth += imgs[i].Width;
-                if (imgs[i].Height!=imgs[0].Height)
+                if (imgs[i].Height != imgs[0].Height)
                 {
                     throw new Exception("高度不同!");
                 }
             }
-            
-            Bitmap bitmap = new Bitmap(totalWidth,imgs[0].Height);
+
+            Bitmap bitmap = new Bitmap(totalWidth, imgs[0].Height);
             int twidth = 0;
             Console.WriteLine("1");
             for (int i = 0; i < imgs.Length; i++)
@@ -60,11 +61,11 @@ namespace PDFTOWORD
                             Console.WriteLine(ex);
                             TLib.Software.Logger.WriteException(ex);
                         }
-                        
+
                     }
-                    
+
                 }
-               
+
                 twidth += imgs[i].Width;
             }
             Console.WriteLine("Fin");
@@ -85,45 +86,46 @@ namespace PDFTOWORD
             TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在处理", false);
             FileInfo fileInfo = new FileInfo(Dir_SourcePdf);
             PdfSize = fileInfo.Length;
-            string dir_WorkPlace = App.Dir_File_PDF + $"{fileInfo.Name.Substring(0, fileInfo.Name.Length - 4)}-{PdfSize}";
-            if (Directory.Exists(dir_WorkPlace))
+            Dir_WorkPlace = App.Dir_File_PDF + $"{fileInfo.Name.Substring(0, fileInfo.Name.Length - 4)}-{PdfSize}/";
+            Directory.CreateDirectory(Dir_WorkPlace);
+            if (File.Exists(Dir_WorkPlace + "pdf.jpg"))
             {
-                Console.WriteLine("已存在dir_WorkPlace");
-            }
-            else
-            {
-                Directory.CreateDirectory(dir_WorkPlace);
-            }
-            await Task.Run(() =>
-            {
-                var pdf = PDFFile.Open(Dir_SourcePdf);
-                List<Bitmap> pics = new List<Bitmap>();
-                int totalWidth = 0;
-                for (int i = 0; i < pdf.PageCount; i++)
+                BtnEdit.Dispatcher.Invoke(() =>
                 {
-                TbInfo.Dispatcher.Invoke(()=> { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, $"{i+1}/{pdf.PageCount}", false); });
-                    var p = pdf.GetPageImage(i, 150);
-                    pics.Add(p);
-                    totalWidth += p.Width;
-                }
-                //Console.WriteLine(totalWidth);
-                // Bitmap bitmap = new Bitmap(totalWidth, pics[0].Height);
-                TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
-                var p1 = CombineImages(pics.ToArray());
-                p1.Save(@"C:\Users\117503445\Desktop\1.jpg");
-
-                //for (int i = 0; i < pics.Count; i++)
-                //{
-                //    Console.WriteLine(i);
-                //    pics[i].Save($@"C:\Users\117503445\Desktop\pics\{i}.jpg");
-                //}
-
-                TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false); });
-                BtnEdit.Dispatcher.Invoke(()=> {
                     BtnEdit.IsEnabled = true;
                     BtnEdit.Content = "开始编辑";
                 });
+            }
+            else
+            {
+                await Task.Run(() =>
+                {
+                    var pdf = PDFFile.Open(Dir_SourcePdf);
+                    List<Bitmap> pics = new List<Bitmap>();
+                    int totalWidth = 0;
+                    for (int i = 0; i < pdf.PageCount; i++)
+                    {
+                        TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, $"{i + 1}/{pdf.PageCount}", false); });
+                        var p = pdf.GetPageImage(i, 150);
+                        pics.Add(p);
+                        totalWidth += p.Width;
+                    }
+                    //Console.WriteLine(totalWidth);
+                    // Bitmap bitmap = new Bitmap(totalWidth, pics[0].Height);
+                    TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
+                    var p1 = CombineImages(pics.ToArray());
+                    p1.Save($@"{Dir_WorkPlace}pdf.jpg");
+
+                    TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false); });
+              
+                });
+            }
+            BtnEdit.Dispatcher.Invoke(() =>
+            {
+                BtnEdit.IsEnabled = true;
+                BtnEdit.Content = "开始编辑";
             });
+
         }
         private string GetTbInfoText(string dir_SourcePdf, string strHandle, bool IsBuilt)
         {
@@ -134,7 +136,8 @@ namespace PDFTOWORD
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
         {
-
+            WdEdit wdEdit = new WdEdit(Dir_WorkPlace);
+            wdEdit.Show();
         }
     }
 }

@@ -29,8 +29,11 @@ namespace PDFTOWORD
         /// 维护点集
         /// </summary>
         private List<TPoint> points = new List<TPoint>();
-        public WdEdit(string file_img)
+        public string Dir_WorkPlace { get; set; }
+        public WdEdit(string dir_WorkPlace)
         {
+            string file_img = dir_WorkPlace + "pdf.jpg";
+            Dir_WorkPlace = dir_WorkPlace;
             InitializeComponent();
             bitmap = new Bitmap(file_img);
             Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
@@ -89,15 +92,17 @@ namespace PDFTOWORD
                     TbInfo.Text = "切割图片中";
                 });
                 var bs = ImageHelper.EditImages(bitmap, points);
+                string dir_pic = Dir_WorkPlace+@"pics\";
+                Directory.CreateDirectory(dir_pic);
                 for (int i = 0; i < bs.Count; i++)
                 {
-                    bs[i].Save($@"{App.Dir_Desktop}1\{i}.jpg");
+                    bs[i].Save($@"{dir_pic}{i}.jpg");
                 }
                 TbInfo.Dispatcher.Invoke(() =>
                 {
                     TbInfo.Text = "生成DOC中";
                 });
-                WordHelper.WriteWord($@"{App.Dir_Desktop}1.doc", Directory.GetFiles($@"{App.Dir_Desktop}1\").ToList());
+                WordHelper.WriteWord($@"{App.Dir_Desktop}1.doc", Directory.GetFiles(dir_pic).ToList());
                 TbInfo.Dispatcher.Invoke(() =>
                 {
                     TbInfo.Text = "运行中";
