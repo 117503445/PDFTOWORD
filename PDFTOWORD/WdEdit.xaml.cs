@@ -177,13 +177,16 @@ namespace PDFTOWORD
         private void G_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Ellipse ep = new Ellipse();
-            ep.Margin = new Thickness(e.GetPosition(Img).X, e.GetPosition(Img).Y,110,110);
-            ep.Width = 2;
-            ep.Height = 2;
-            ep.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            ep.StrokeThickness = 5;
+            ep.Visibility = Visibility.Visible;
+           // ep.Margin = new Thickness(e.GetPosition(Img).X, e.GetPosition(Img).Y,bitmap.Width- e.GetPosition(Img).X+2, Img.ActualHeight - e.GetPosition(Img).Y-30);
+            //Img.ActualHeight- e.GetPosition(Img).Y+2
+            //ep.Width = 200;
+            //ep.Height = 200;
+            ep.Stroke = new SolidColorBrush(Colors.Red);
+            ep.StrokeThickness = 3;
+            ep.Fill =new SolidColorBrush(Colors.Red);
             G.Children.Add(ep);
-            Panel.SetZIndex(ep, 2);
+            Panel.SetZIndex(ep, 20);
 
             //Line l = new Line();
             //G.Children.Add(l);
