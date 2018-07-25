@@ -17,8 +17,8 @@
             <TextBlock Name="TbInfo" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center">运行中</TextBlock>
         </StackPanel>
         <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"  PanningMode="HorizontalOnly" PreviewMouseWheel="Scv_PreviewMouseWheel" Grid.Column="1"  >
-            <Grid Name="G" MouseDown="G_MouseDown">
-                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left" MouseMove="Img_MouseMove" MouseLeave="Img_MouseLeave" />
+            <Grid Name="G" MouseDown="G_MouseDown" SizeChanged="G_SizeChanged">
+                <Image Name="Img" MouseDown="Img_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Left"  />
             </Grid>
         </ScrollViewer>
     </Grid>

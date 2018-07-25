@@ -44,8 +44,9 @@ namespace PDFTOWORD
                 IsEnabled = true,
                 Interval = TimeSpan.FromMilliseconds(20)
             };
-            timer.Tick += (s, e) => {
-                if (Mouse.GetPosition(GMain).X>=50)
+            timer.Tick += (s, e) =>
+            {
+                if (Mouse.GetPosition(GMain).X >= 50)
                 {
                     l1.Visibility = Visibility.Visible;
                     l2.Visibility = Visibility.Visible;
@@ -77,7 +78,7 @@ namespace PDFTOWORD
         }
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
         }
 
         /// <summary>
@@ -148,7 +149,8 @@ namespace PDFTOWORD
         {
             Visibility = Visibility.Collapsed,
             Stroke = System.Windows.Media.Brushes.Blue,
-            StrokeThickness = 2,Opacity=0.3
+            StrokeThickness = 2,
+            Opacity = 0.3
         };//鼠标指示,横
         private Line l2 = new Line()
         {
@@ -162,31 +164,17 @@ namespace PDFTOWORD
 
         }
 
-        private void Img_MouseMove(object sender, MouseEventArgs e)
-        {
-           
-
-
-        }
-
-        private void Img_MouseLeave(object sender, MouseEventArgs e)
-        {
-            
-        }
-
         private void G_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Ellipse ep = new Ellipse();
-            ep.Visibility = Visibility.Visible;
-           // ep.Margin = new Thickness(e.GetPosition(Img).X, e.GetPosition(Img).Y,bitmap.Width- e.GetPosition(Img).X+2, Img.ActualHeight - e.GetPosition(Img).Y-30);
-            //Img.ActualHeight- e.GetPosition(Img).Y+2
-            //ep.Width = 200;
-            //ep.Height = 200;
-            ep.Stroke = new SolidColorBrush(Colors.Red);
-            ep.StrokeThickness = 3;
-            ep.Fill =new SolidColorBrush(Colors.Red);
-            G.Children.Add(ep);
-            Panel.SetZIndex(ep, 20);
+            //Console.WriteLine("!");
+            //Console.WriteLine(e.GetPosition(Img).X);
+            //Console.WriteLine(e.GetPosition(Img).Y);
+            //Console.WriteLine(bitmap.Width - e.GetPosition(Img).X + 20);
+            //Console.WriteLine(Img.ActualHeight - e.GetPosition(Img).Y - 2);
+            //Console.WriteLine("!!");
+            //Console.WriteLine(Img.ActualHeight);
+            //Console.WriteLine("!");
+
 
             //Line l = new Line();
             //G.Children.Add(l);
@@ -198,6 +186,36 @@ namespace PDFTOWORD
             //l.StrokeThickness = 10;
             //Panel.SetZIndex(l, 2);
             points.Add(new TPoint(e.GetPosition(Img).X / Img.ActualWidth, e.GetPosition(Img).Y / Img.ActualHeight));
+            UpdateEllipse();
+        }
+        private List<Ellipse> eps = new List<Ellipse>();
+        private void UpdateEllipse()
+        {
+            for (int i = 0; i < eps.Count; i++)
+            {
+                G.Children.Remove(eps[i]);
+            }
+            for (int i = 0; i < points.Count; i++)
+            {
+                Ellipse ep = new Ellipse();
+                ep.Visibility = Visibility.Visible;
+
+                ep.Margin = new Thickness(points[i].X*Img.ActualWidth, points[i].Y * Img.ActualHeight, bitmap.Width - (points[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (points[i].Y * Img.ActualHeight) - 5);
+                //Img.ActualHeight- e.GetPosition(Img).Y+2
+                //ep.Width = 200;
+                //ep.Height = 200;
+                ep.Stroke = new SolidColorBrush(Colors.Red);
+                ep.StrokeThickness = 3;
+                ep.Fill = new SolidColorBrush(Colors.Red);
+                G.Children.Add(ep);
+                Panel.SetZIndex(ep, 2);
+                eps.Add(ep);
+            }
+        }
+
+        private void G_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            UpdateEllipse();
         }
     }
 
