@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.IO;
 using System.Windows.Threading;
 using TLib.Software;
+using System.Collections.ObjectModel;
 
 namespace PDFTOWORD
 {
@@ -27,62 +28,74 @@ namespace PDFTOWORD
         /// 要操作的bitmap
         /// </summary>
         private Bitmap bitmap;
+
+        private System.Drawing.Size bpSize;
+
         /// <summary>
         /// 维护点集
         /// </summary>
-        public List<TPoint> Tps = new List<TPoint>();
+        public ObservableCollection<TPoint> Tps = new ObservableCollection<TPoint>();
         public string Dir_WorkPlace { get; set; }
+        private string Dir_tpsTXT { get { return Dir_WorkPlace + "tps.txt"; } }
         public WdEdit(string dir_WorkPlace)
         {
             string file_img = dir_WorkPlace + "pdf.jpg";
             Dir_WorkPlace = dir_WorkPlace;
             InitializeComponent();
             bitmap = new Bitmap(file_img);
+            bpSize = bitmap.Size;
             Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
 
-            DispatcherTimer timer = new DispatcherTimer()
-            {
-                IsEnabled = true,
-                Interval = TimeSpan.FromMilliseconds(20)
-            };
-            timer.Tick += (s, e) =>
-            {
-                if (Mouse.GetPosition(GMain).X >= 50)
-                {
-                    l1.Visibility = Visibility.Visible;
-                    l2.Visibility = Visibility.Visible;
-                    l1.X1 = 0;
-                    l1.Y1 = Mouse.GetPosition(GMain).Y;
-                    l1.X2 = bitmap.Width;
-                    l1.Y2 = Mouse.GetPosition(GMain).Y;
-
-                    l2.X1 = Mouse.GetPosition(GMain).X - 50;
-                    l2.Y1 = 0;
-                    l2.X2 = Mouse.GetPosition(GMain).X - 50;
-                    l2.Y2 = bitmap.Height;
-                }
-                else
-                {
-                    l1.Visibility = Visibility.Hidden;
-                    l2.Visibility = Visibility.Hidden;
-                }
-            };
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            G.Children.Add(l1);
-            G.Children.Add(l2);
-            Panel.SetZIndex(l1, 3);
-            Panel.SetZIndex(l2, 3);
-            var i = new List<string> { "Tps" };
-            if (File.Exists(Dir_WorkPlace + "tps.xml"))
-            {
-                Tps = SerializeHelper.Load<List<TPoint>>(Dir_WorkPlace + "tps.xml");
-            }
 
+            var i = new List<string> { "Tps" };
+            if (File.Exists(Dir_tpsTXT))
+            {
+                Tps = LoadTps();
+            }
+            Tps.CollectionChanged += (sd, arg) =>
+            {
+                SaveTps();
+            };
+            UpdateEllipse();
         }
+
+        private ObservableCollection<TPoint> LoadTps()
+        {
+            ObservableCollection<TPoint> p = new ObservableCollection<TPoint>();
+            if (!File.Exists(Dir_tpsTXT))
+            {
+                return p;
+            }
+            var s = File.ReadAllText(Dir_tpsTXT, Encoding.UTF8);
+            string[] ss = s.Split(';');
+            foreach (var item in ss)
+            {
+                var sss = item.Split(',');
+                if (sss.Length == 2)
+                {
+                    TPoint point = new TPoint(double.Parse(sss[0]), double.Parse(sss[1]));
+                    p.Add(point);
+                }
+            }
+            return p;
+        }
+
+        private void SaveTps()
+        {
+            //File.Create(Dir_tpsTXT);
+            string s = "";
+            foreach (var item in Tps)
+            {
+                s += item.X + "," + item.Y + ";";
+            }
+            File.WriteAllText(Dir_tpsTXT, s, Encoding.UTF8);
+        }
+
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
@@ -128,7 +141,7 @@ namespace PDFTOWORD
                 {
                     BtnSave.IsEnabled = false;
                 });
-                var bs = ImageHelper.EditImages(bitmap, Tps);
+                var bs = ImageHelper.EditImages(bitmap, Tps.ToList());
                 string dir_pic = Dir_WorkPlace + @"pics\";
                 if (Directory.Exists(dir_pic))
                 {
@@ -152,20 +165,6 @@ namespace PDFTOWORD
             BtnSave.IsEnabled = true;
         }
 
-        private Line l1 = new Line()
-        {
-            Visibility = Visibility.Collapsed,
-            Stroke = System.Windows.Media.Brushes.Blue,
-            StrokeThickness = 2,
-            Opacity = 0.3
-        };//鼠标指示,横
-        private Line l2 = new Line()
-        {
-            Visibility = Visibility.Collapsed,
-            Stroke = System.Windows.Media.Brushes.Blue,
-            StrokeThickness = 2,
-            Opacity = 0.3
-        };//鼠标指示,竖
         private void BtnUndo_Click(object sender, RoutedEventArgs e)
         {
 
@@ -207,7 +206,7 @@ namespace PDFTOWORD
                 Ellipse ep = new Ellipse();
                 ep.Visibility = Visibility.Visible;
 
-                ep.Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, bitmap.Width - (Tps[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (Tps[i].Y * Img.ActualHeight) - 5);
+                ep.Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, bpSize.Width - (Tps[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (Tps[i].Y * Img.ActualHeight) - 5);
                 //Img.ActualHeight- e.GetPosition(Img).Y+2
                 //ep.Width = 200;
                 //ep.Height = 200;
@@ -218,7 +217,6 @@ namespace PDFTOWORD
                 Panel.SetZIndex(ep, 2);
                 eps.Add(ep);
             }
-            SerializeHelper.Save(Tps, Dir_WorkPlace + "tps.xml");
         }
 
         private void G_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -86,6 +86,7 @@ namespace PDFTOWORD
 
         public TPoint(double x, double y)
         {
+            
             X = x;
             Y = y;
         }
