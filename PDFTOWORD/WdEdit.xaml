@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PDFTOWORD"
         mc:Ignorable="d"
-        Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid Name="GMain">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
@@ -14,6 +14,9 @@
         <StackPanel>
             <Button Name="BtnSave" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE792;" FontFamily="Segoe MDL2 Assets" FontSize="21" Click="BtnSave_Click"></Button>
             <Button Name="BtnUndo" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE7A7;" FontFamily="Segoe MDL2 Assets" FontSize="21" Click="BtnUndo_Click"></Button>
+            <Button Name="BtnDelete" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="21" Click="BtnDelete_Click" ></Button>
+
+
             <TextBlock Name="TbInfo" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center">运行中</TextBlock>
         </StackPanel>
         <ScrollViewer Name="Scv" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled"  PanningMode="HorizontalOnly" PreviewMouseWheel="Scv_PreviewMouseWheel" Grid.Column="1" Cursor="Cross"  >

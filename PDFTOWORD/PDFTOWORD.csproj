@@ -87,6 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ImageHelper.cs" />
     <Compile Include="WdEdit.xaml.cs">
       <DependentUpon>WdEdit.xaml</DependentUpon>
