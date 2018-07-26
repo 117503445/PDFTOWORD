@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.IO;
 using System.Windows.Threading;
+using TLib.Software;
 
 namespace PDFTOWORD
 {
@@ -29,7 +30,7 @@ namespace PDFTOWORD
         /// <summary>
         /// 维护点集
         /// </summary>
-        private List<TPoint> points = new List<TPoint>();
+        public List<TPoint> Tps = new List<TPoint>();
         public string Dir_WorkPlace { get; set; }
         public WdEdit(string dir_WorkPlace)
         {
@@ -75,6 +76,12 @@ namespace PDFTOWORD
             G.Children.Add(l2);
             Panel.SetZIndex(l1, 3);
             Panel.SetZIndex(l2, 3);
+            var i = new List<string> { "Tps" };
+            if (File.Exists(Dir_WorkPlace + "tps.xml"))
+            {
+                Tps = SerializeHelper.Load<List<TPoint>>(Dir_WorkPlace + "tps.xml");
+            }
+
         }
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -108,7 +115,7 @@ namespace PDFTOWORD
         {
             await Task.Run(() =>
             {
-                if (points.Count % 2 != 0)
+                if (Tps.Count % 2 != 0)
                 {
                     Console.WriteLine("点不对应");
                     return;
@@ -121,7 +128,7 @@ namespace PDFTOWORD
                 {
                     BtnSave.IsEnabled = false;
                 });
-                var bs = ImageHelper.EditImages(bitmap, points);
+                var bs = ImageHelper.EditImages(bitmap, Tps);
                 string dir_pic = Dir_WorkPlace + @"pics\";
                 if (Directory.Exists(dir_pic))
                 {
@@ -185,7 +192,7 @@ namespace PDFTOWORD
             //l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
             //l.StrokeThickness = 10;
             //Panel.SetZIndex(l, 2);
-            points.Add(new TPoint(e.GetPosition(Img).X / Img.ActualWidth, e.GetPosition(Img).Y / Img.ActualHeight));
+            Tps.Add(new TPoint(e.GetPosition(Img).X / Img.ActualWidth, e.GetPosition(Img).Y / Img.ActualHeight));
             UpdateEllipse();
         }
         private List<Ellipse> eps = new List<Ellipse>();
@@ -195,12 +202,12 @@ namespace PDFTOWORD
             {
                 G.Children.Remove(eps[i]);
             }
-            for (int i = 0; i < points.Count; i++)
+            for (int i = 0; i < Tps.Count; i++)
             {
                 Ellipse ep = new Ellipse();
                 ep.Visibility = Visibility.Visible;
 
-                ep.Margin = new Thickness(points[i].X*Img.ActualWidth, points[i].Y * Img.ActualHeight, bitmap.Width - (points[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (points[i].Y * Img.ActualHeight) - 5);
+                ep.Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, bitmap.Width - (Tps[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (Tps[i].Y * Img.ActualHeight) - 5);
                 //Img.ActualHeight- e.GetPosition(Img).Y+2
                 //ep.Width = 200;
                 //ep.Height = 200;
@@ -211,6 +218,7 @@ namespace PDFTOWORD
                 Panel.SetZIndex(ep, 2);
                 eps.Add(ep);
             }
+            SerializeHelper.Save(Tps, Dir_WorkPlace + "tps.xml");
         }
 
         private void G_SizeChanged(object sender, SizeChangedEventArgs e)

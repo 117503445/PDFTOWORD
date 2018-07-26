@@ -83,8 +83,13 @@ namespace Demo1
             //    m.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
             //}
 
-            Console.WriteLine("213.pdf".Substring(0, "213.pdf".Length - 4));
-            WriteWord($@"C:\Users\117503445\Desktop\pics\1.doc", @"C:\Users\117503445\Desktop\pics1");
+            //Console.WriteLine("213.pdf".Substring(0, "213.pdf".Length - 4));
+            //WriteWord($@"C:\Users\117503445\Desktop\pics\1.doc", @"C:\Users\117503445\Desktop\pics1");
+            for (int i = 0; i < 11; i+=2)
+            {
+                Console.WriteLine(i);
+            }
+
             Console.WriteLine("OJBK");
             Console.ReadLine();
             

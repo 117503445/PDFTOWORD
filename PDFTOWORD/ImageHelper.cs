@@ -81,6 +81,9 @@ namespace PDFTOWORD
     /// </summary>
     public class TPoint
     {
+        public TPoint() { }
+
+
         public TPoint(double x, double y)
         {
             X = x;
