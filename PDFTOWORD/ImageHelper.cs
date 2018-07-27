@@ -83,9 +83,9 @@ namespace PDFTOWORD
     {
         public TPoint(double x, double y,int pgIndex)
         {
-            
             X = x;
             Y = y;
+            PgIndex = pgIndex;
         }
 
         /// <summary>

@@ -43,9 +43,9 @@ namespace PDFTOWORD
             foreach (var item in ss)
             {
                 var sss = item.Split(',');
-                if (sss.Length == 2)
+                if (sss.Length == 3)
                 {
-                    TPoint point = new TPoint(double.Parse(sss[0]), double.Parse(sss[1]));
+                    TPoint point = new TPoint(double.Parse(sss[0]), double.Parse(sss[1]), int.Parse(sss[2]));
                     p.Add(point);
                 }
             }
@@ -56,12 +56,14 @@ namespace PDFTOWORD
             string s = "";
             foreach (var item in Tps)
             {
-                s += item.X + "," + item.Y + ";";
+                s += item.X + "," + item.Y + "," + item.PgIndex + ";";
             }
             File.WriteAllText(File_tpstxt, s, Encoding.UTF8);
         }
+
         public string Dir_WorkPlace { get; set; }
         private string File_tpstxt { get { return Dir_WorkPlace + "tps.txt"; } }
+        int maxPgIndex = 0;
 
         public WdEdit(string dir_WorkPlace)
         {
@@ -70,13 +72,11 @@ namespace PDFTOWORD
             Dir_WorkPlace = dir_WorkPlace;
 
         }
-        int maxPgIndex = 0;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DirectoryInfo info = new DirectoryInfo(Dir_WorkPlace + "temp");
             var f = info.GetFiles();
-
-            maxPgIndex = (from x in f orderby int.Parse(x.Name.Substring(0, x.Name.Length - 4)) select int.Parse(x.Name.Substring(0, x.Name.Length - 4))).ToList().Last();//不然11.jpg在2.jpg前面
+            maxPgIndex = (from x in f orderby int.Parse(x.Name.Substring(0, x.Name.Length - 4)) select int.Parse(x.Name.Substring(0, x.Name.Length - 4))).ToList().Last();
 
 
             if (File.Exists(File_tpstxt))
@@ -88,16 +88,39 @@ namespace PDFTOWORD
                 SaveTps();
             };
             UpdateEpsAndRs();
-            Console.WriteLine(2);
             UpdateImg();
+
+
+            G.Children.Add(lx);
+            G.Children.Add(ly);
+            G.Children.Add(l0);
+            G.Children.Add(l1);
         }
-        int PgIndex { get { return pgIndex; } set { pgIndex = value; UpdateImg(); } }
+
+        int PgIndex
+        {
+            get { return pgIndex; }
+            set
+            {
+                var tps = (from x in Tps where x.PgIndex == PgIndex select x).ToList();
+                if (tps.Count % 2 == 0)
+                {
+                    pgIndex = value; UpdateImg();
+                }
+                else
+                {
+                    WdMessageBox.Display("消息", "请先完成本页的配对再翻页", "", "", "确定");
+                }
+            }
+        }
         int pgIndex;
         private void UpdateImg()
         {
             Img.Source = null;
             Img.Source = GetImage(Dir_WorkPlace + $"temp/{PgIndex}.jpg");
             //Img1.Source = new BitmapImage(new Uri(Dir_WorkPlace + $"temp/{PgIndex + 1}.jpg", UriKind.Absolute));
+            UpdateEpsAndRs();
+            TbPgInfo.Text = $"{PgIndex + 1}/{maxPgIndex + 1}";
         }
         public static BitmapImage GetImage(string imagePath)
         {
@@ -119,32 +142,20 @@ namespace PDFTOWORD
             return bitmap;
         }
 
-        private void Img_MouseDown(object sender, MouseButtonEventArgs e)
+
+        Line lx = new Line()
         {
-            if (e.RightButton == MouseButtonState.Released)//左键
-            {
-                double x = e.GetPosition(Img).X / Img.ActualWidth;
-                double y = e.GetPosition(Img).Y / Img.ActualHeight;
+            Stroke = new SolidColorBrush(Colors.Gold),
+            StrokeThickness = 2
+        };
+        Line ly = new Line()
+        {
+            Stroke = new SolidColorBrush(Colors.Gold),
+            StrokeThickness = 2
+        };
 
-                bool isLegal = true;
-                if (Tps.Count > 0)
-                {
-                    isLegal = x > Tps.Last().X && y > Tps.Last().Y;
-                }
 
-                if (Tps.Count % 2 == 0 || (isLegal))
-                {
-                    Tps.Add(new TPoint(x, y,pgIndex));
-                }
-            }
-            else
-            {//右键
-                RemoveAPoint();
-            }
 
-            UpdateEpsAndRs();
-
-        }
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
             if (Tps.Count % 2 != 0)
@@ -154,7 +165,6 @@ namespace PDFTOWORD
             }
             await Task.Run(() =>
             {
-
                 TbInfo.Dispatcher.Invoke(() =>
                 {
                     TbInfo.Text = "切割图片中";
@@ -163,7 +173,16 @@ namespace PDFTOWORD
                 {
                     BtnSave.IsEnabled = false;
                 });
-                var bs = ImageHelper.EditImages(null, Tps.ToList());//!!!!!!!!!!!!!!!!!!!!!!!!
+                List<Bitmap> bs = new List<Bitmap>();
+                for (int i = 0; i < maxPgIndex + 1; i++)
+                {
+                    var tps = (from x in Tps where x.PgIndex == i select x).ToList();
+                    Bitmap b = new Bitmap(Dir_WorkPlace + $"temp/{i}.jpg");
+                    var t = ImageHelper.EditImages(b, tps);
+                    bs = bs.Concat(t).ToList();
+                    b.Dispose();
+                }
+
 
                 string dir_pic = Dir_WorkPlace + @"pics\";
                 if (Directory.Exists(dir_pic))
@@ -206,16 +225,116 @@ namespace PDFTOWORD
         {
             RemoveAPoint();
         }
-
+        private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                if (PgIndex > 0)
+                {
+                    PgIndex -= 1;
+                }
+            }
+            else
+            {
+                if (pgIndex < maxPgIndex)
+                {
+                    PgIndex += 1;
+                }
+            }
+        }
         private void G_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateEpsAndRs();
         }
-        private void Window_Closed(object sender, EventArgs e)
+
+
+
+        Line l0 = new Line()
         {
+            Stroke = new SolidColorBrush(Colors.Green),
+            StrokeThickness = 2
+        };
+        Line l1 = new Line()
+        {
+            Stroke = new SolidColorBrush(Colors.Green),
+            StrokeThickness = 2
+        };
+        private List<Ellipse> eps = new List<Ellipse>();
+        private List<Rec> rs = new List<Rec>();
+        private void UpdateEpsAndRs()
+        {
+            l0.Visibility = Visibility.Collapsed;
+            l1.Visibility = Visibility.Collapsed;
+            var tps = (from x in Tps where x.PgIndex == pgIndex select x).ToList();
+            //Console.WriteLine("!!!");
+            //foreach (var item in tps)
+            //{
+            //    Console.WriteLine(item.PgIndex);
+            //}
+            for (int i = 0; i < eps.Count; i++)
+            {
+                G.Children.Remove(eps[i]);
+            }
+            for (int i = 0; i < rs.Count; i++)
+            {
+                G.Children.Remove(rs[i]);
+            }
+            for (int i = 0; i < tps.Count; i++)
+            {
+                Ellipse ep = new Ellipse
+                {
+                    Visibility = Visibility.Visible,
+                    Margin = new Thickness(tps[i].X * Img.ActualWidth - 5, tps[i].Y * Img.ActualHeight - 5, 0, 0),
+                    Width = 10,
+                    Height = 10,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Stroke = new SolidColorBrush(Colors.Red),
+                    StrokeThickness = 3,
+                    Fill = new SolidColorBrush(Colors.Red)
+                };
+                G.Children.Add(ep);
+                Panel.SetZIndex(ep, 2);
+                eps.Add(ep);
+            }
 
+            for (int i = 0; i < tps.Count; i += 2)
+            {
+                if (i + 1 < tps.Count)
+                {
+                    Rec r = new Rec
+                    {
+                        Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0)),
+                        HorizontalAlignment = HorizontalAlignment.Left,
+                        VerticalAlignment = VerticalAlignment.Top,
+                        Stroke = new SolidColorBrush(Colors.Red),
+                        StrokeThickness = 3,
+                        Margin = new Thickness(tps[i].X * Img.ActualWidth - 2, tps[i].Y * Img.ActualHeight - 2, 0, 0),
+                        Width = (tps[i + 1].X - tps[i].X) * Img.ActualWidth + 3,
+                        Height = (tps[i + 1].Y - tps[i].Y) * Img.ActualHeight + 3
+                    };
+                    G.Children.Add(r);
+                    Panel.SetZIndex(r, 2);
+                    rs.Add(r);
+                }
+                else
+                {
+                    l0.Visibility = Visibility.Visible;
+                    l1.Visibility = Visibility.Visible;
+
+                    l0.X1 = 0;
+                    l0.Y1 = tps[i].Y * Img.ActualHeight;
+                    l0.X2 = G.ActualWidth;
+                    l0.Y2 = tps[i].Y * Img.ActualHeight;
+
+                    l1.X1 = tps[i].X * Img.ActualWidth;
+                    l1.Y1 = 0;
+                    l1.X2 = tps[i].X * Img.ActualWidth;
+                    l1.Y2 = G.ActualHeight;
+
+                }
+            }
         }
-
         private void RemoveAPoint()
         {
             if (Tps.Count > 0)
@@ -228,85 +347,59 @@ namespace PDFTOWORD
                 WdMessageBox.Display("消息", "无法再撤销了");
             }
         }
-        private List<Ellipse> eps = new List<Ellipse>();
-        private List<Rec> rs = new List<Rec>();
-        private void UpdateEpsAndRs()
+
+        private void G_MouseMove(object sender, MouseEventArgs e)
         {
-            for (int i = 0; i < eps.Count; i++)
-            {
-                //G.Children.Remove(eps[i]);
-            }
-            for (int i = 0; i < rs.Count; i++)
-            {
-                //G.Children.Remove(rs[i]);
-            }
-            for (int i = 0; i < Tps.Count; i += 2)
-            {
-                //Ellipse ep = new Ellipse
-                //{
-                //    Visibility = Visibility.Visible,
-                //    Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, bpSize.Width - (Tps[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (Tps[i].Y * Img.ActualHeight) - 5),
-                //    //Img.ActualHeight- e.GetPosition(Img).Y+2
-                //    //ep.Width = 200;
-                //    //ep.Height = 200;
-                //    Stroke = new SolidColorBrush(Colors.Red),
-                //    StrokeThickness = 3,
-                //    Fill = new SolidColorBrush(Colors.Red)
-                //};
-                //G.Children.Add(ep);
-                //Panel.SetZIndex(ep, 2);
-                //eps.Add(ep);
-            }
+            lx.X1 = 0;
+            lx.Y1 = e.GetPosition(G).Y;
+            lx.X2 = G.ActualWidth;
+            lx.Y2 = e.GetPosition(G).Y;
 
-            //for (int i = 0; i < Tps.Count; i += 2)
-            //{
-            //    if (i + 1 < Tps.Count)
-            //    {
-            //        Rec r = new Rec
-            //        {
-            //            Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0)),
-            //            HorizontalAlignment = HorizontalAlignment.Left,
-            //            VerticalAlignment = VerticalAlignment.Top,
-            //            Stroke = new SolidColorBrush(Colors.Red),
-            //            StrokeThickness = 3,
-            //            Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, 0, 0),
-            //            Width = (Tps[i + 1].X - Tps[i].X) * Img.ActualWidth,
-            //            Height = (Tps[i + 1].Y - Tps[i].Y) * Img.ActualHeight
-            //        };
-            //        G.Children.Add(r);
-            //        Panel.SetZIndex(r, 2);
-            //        rs.Add(r);
-
-            //    }
-            //}
-        }
-
-        private void GMain_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
+            ly.X1 = e.GetPosition(G).X;
+            ly.Y1 = 0;
+            ly.X2 = e.GetPosition(G).X;
+            ly.Y2 = G.ActualHeight;
 
         }
 
-        private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void G_MouseLeave(object sender, MouseEventArgs e)
         {
+            lx.Visibility = Visibility.Collapsed;
+            ly.Visibility = Visibility.Collapsed;
+        }
 
-            if (e.Delta > 0)
+        private void G_MouseEnter(object sender, MouseEventArgs e)
+        {
+            lx.Visibility = Visibility.Visible;
+            ly.Visibility = Visibility.Visible;
+        }
+
+        private void G_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.RightButton == MouseButtonState.Released)//左键
             {
-                if (PgIndex > 0)
+                double x = e.GetPosition(Img).X / Img.ActualWidth;
+                double y = e.GetPosition(Img).Y / Img.ActualHeight;
+
+                bool isLegal = true;
+                if (Tps.Count > 0)
                 {
-
-                    PgIndex -= 1;
+                    isLegal = x > Tps.Last().X && y > Tps.Last().Y;
+                }
+                //isLegal = true;
+                if (Tps.Count % 2 == 0 || (isLegal))
+                {
+                    //Console.WriteLine(pgIndex);
+                    Tps.Add(new TPoint(x, y, pgIndex));
                 }
             }
             else
-            {
-                if (pgIndex < maxPgIndex)
-                {
-
-                    PgIndex += 1;
-                }
+            {//右键
+                RemoveAPoint();
             }
-        }
 
+            UpdateEpsAndRs();
+        }
     }
 }
 

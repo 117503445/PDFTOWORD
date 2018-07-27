@@ -59,8 +59,9 @@ namespace PDFTOWORD
                         Directory.CreateDirectory(dir_temp);
                         p.Save($@"{dir_temp}{i}.jpg");
                     }
-                    TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
-                    var p1 = ImageHelper.CombineImages(pics);
+                    //TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
+                    // var p1 = ImageHelper.CombineImages(pics);
+                    var p1 = new Bitmap(1,1);
                     using (FileStream stream = File.Create($@"{Dir_WorkPlace}pdf.jpg"))
                     {
                         p1.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
