@@ -78,20 +78,33 @@ namespace PDFTOWORD
 
         public WdEdit(string dir_WorkPlace)
         {
-            string file_img = dir_WorkPlace + "pdf.jpg";
-            Dir_WorkPlace = dir_WorkPlace;
             InitializeComponent();
-            bitmap = new Bitmap(file_img);
-            bpSize = bitmap.Size;
-            Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
 
+            Dir_WorkPlace = dir_WorkPlace;
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            string file_img = Dir_WorkPlace + "pdf.jpg";
+            bitmap = new Bitmap(file_img);
+            //MemoryStream ms = new MemoryStream();
 
-            var i = new List<string> { "Tps" };
+            //bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            //byte[] bytes = ms.GetBuffer();  //byte[]   bytes=   ms.ToArray(); 这两句都可以
+            //ms.Close();
+            ////Convert it to BitmapImage
+            //BitmapImage image = new BitmapImage();
+            //image.BeginInit();
+            //image.StreamSource = new MemoryStream(bytes);
+            //image.EndInit();
+            //Img.Source = image;
+
+            //bpSize = bitmap.Size;
+            Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
+            //ms.Dispose();
+            //Img.Source = GetImage(file_img);
+            Console.WriteLine(1);
             if (File.Exists(File_tpstxt))
             {
                 Tps = LoadTps();
@@ -101,7 +114,11 @@ namespace PDFTOWORD
                 SaveTps();
             };
             UpdateEpsAndRs();
+            Console.WriteLine(2);
         }
+
+
+
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
@@ -265,22 +282,22 @@ namespace PDFTOWORD
             {
                 G.Children.Remove(rs[i]);
             }
-            for (int i = 0; i < Tps.Count; i+=2)
+            for (int i = 0; i < Tps.Count; i += 2)
             {
-                Ellipse ep = new Ellipse
-                {
-                    Visibility = Visibility.Visible,
-                    Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, bpSize.Width - (Tps[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (Tps[i].Y * Img.ActualHeight) - 5),
-                    //Img.ActualHeight- e.GetPosition(Img).Y+2
-                    //ep.Width = 200;
-                    //ep.Height = 200;
-                    Stroke = new SolidColorBrush(Colors.Red),
-                    StrokeThickness = 3,
-                    Fill = new SolidColorBrush(Colors.Red)
-                };
-                G.Children.Add(ep);
-                Panel.SetZIndex(ep, 2);
-                eps.Add(ep);
+                //Ellipse ep = new Ellipse
+                //{
+                //    Visibility = Visibility.Visible,
+                //    Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, bpSize.Width - (Tps[i].X * Img.ActualWidth) + 30, Img.ActualHeight - (Tps[i].Y * Img.ActualHeight) - 5),
+                //    //Img.ActualHeight- e.GetPosition(Img).Y+2
+                //    //ep.Width = 200;
+                //    //ep.Height = 200;
+                //    Stroke = new SolidColorBrush(Colors.Red),
+                //    StrokeThickness = 3,
+                //    Fill = new SolidColorBrush(Colors.Red)
+                //};
+                //G.Children.Add(ep);
+                //Panel.SetZIndex(ep, 2);
+                //eps.Add(ep);
             }
 
             for (int i = 0; i < Tps.Count; i += 2)
