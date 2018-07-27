@@ -87,7 +87,7 @@ namespace PDFTOWORD
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             string file_img = Dir_WorkPlace + "pdf.jpg";
-            bitmap = new Bitmap(file_img);
+            //bitmap = new Bitmap(file_img);
             //MemoryStream ms = new MemoryStream();
 
             //bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
@@ -101,7 +101,9 @@ namespace PDFTOWORD
             //Img.Source = image;
 
             //bpSize = bitmap.Size;
-            Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
+
+            //Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
+
             //ms.Dispose();
             //Img.Source = GetImage(file_img);
             Console.WriteLine(1);
@@ -115,35 +117,40 @@ namespace PDFTOWORD
             };
             UpdateEpsAndRs();
             Console.WriteLine(2);
+            UpdateImg();
         }
+        int PgIndex { get { return pgIndex; } set { UpdateImg(); pgIndex = value; } }
+        int pgIndex;
+        BitmapImage oldimg;
+        private void UpdateImg()
+        {
+            Img.Source = null;
+            Img.Source = GetImage(Dir_WorkPlace + $"temp/{PgIndex}.jpg");
+            //Img1.Source = new BitmapImage(new Uri(Dir_WorkPlace + $"temp/{PgIndex + 1}.jpg", UriKind.Absolute));
+        }
+        public static BitmapImage GetImage(string imagePath)
+        {
+            BitmapImage bitmap = new BitmapImage();
 
+            if (File.Exists(imagePath))
+            {
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
 
+                using (Stream ms = new MemoryStream(File.ReadAllBytes(imagePath)))
+                {
+                    bitmap.StreamSource = ms;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+                }
+            }
+
+            return bitmap;
+        }
 
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
 
-        }
-        /// <summary>
-        /// 使ScrollViewer支持横向滚动
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Scv_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer sv = sender as ScrollViewer;
-            for (int i = 0; i < 6; i++)
-            {
-                if (e.Delta > 0)
-                {
-                    sv.LineLeft();
-                }
-                else
-                {
-                    sv.LineRight();
-                }
-
-            }
-            e.Handled = true;
         }
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -207,47 +214,28 @@ namespace PDFTOWORD
         }
         private void G_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //Console.WriteLine("!");
-            //Console.WriteLine(e.GetPosition(Img).X);
-            //Console.WriteLine(e.GetPosition(Img).Y);
-            //Console.WriteLine(bitmap.Width - e.GetPosition(Img).X + 20);
-            //Console.WriteLine(Img.ActualHeight - e.GetPosition(Img).Y - 2);
-            //Console.WriteLine("!!");
-            //Console.WriteLine(Img.ActualHeight);
-            //Console.WriteLine("!");
+            //if (e.RightButton == MouseButtonState.Released)//左键
+            //{
+            //    double x = e.GetPosition(Img).X / Img.ActualWidth;
+            //    double y = e.GetPosition(Img).Y / Img.ActualHeight;
 
+            //    bool isLegal = true;
+            //    if (Tps.Count > 0)
+            //    {
+            //        isLegal = x > Tps.Last().X && y > Tps.Last().Y;
+            //    }
 
-            //Line l = new Line();
-            //G.Children.Add(l);
-            //l.X1 = e.GetPosition(Img).X;
-            //l.X2 = e.GetPosition(Img).X ;
-            //l.Y1 = e.GetPosition(Img).Y;
-            //l.Y2 = e.GetPosition(Img).Y ;
-            //l.Stroke = System.Windows.Media.Brushes.LightSteelBlue;
-            //l.StrokeThickness = 10;
-            //Panel.SetZIndex(l, 2);
-            if (e.RightButton == MouseButtonState.Released)//左键
-            {
-                double x = e.GetPosition(Img).X / Img.ActualWidth;
-                double y = e.GetPosition(Img).Y / Img.ActualHeight;
+            //    if (Tps.Count % 2 == 0 || (isLegal))
+            //    {
+            //        Tps.Add(new TPoint(x, y));
+            //    }
+            //}
+            //else
+            //{//右键
+            //    RemoveAPoint();
+            //}
 
-                bool isLegal = true;
-                if (Tps.Count > 0)
-                {
-                    isLegal = x > Tps.Last().X && y > Tps.Last().Y;
-                }
-
-                if (Tps.Count % 2 == 0 || (isLegal))
-                {
-                    Tps.Add(new TPoint(x, y));
-                }
-            }
-            else
-            {//右键
-                RemoveAPoint();
-            }
-
-            UpdateEpsAndRs();
+            //UpdateEpsAndRs();
         }
         private void G_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -276,11 +264,11 @@ namespace PDFTOWORD
         {
             for (int i = 0; i < eps.Count; i++)
             {
-                G.Children.Remove(eps[i]);
+                //G.Children.Remove(eps[i]);
             }
             for (int i = 0; i < rs.Count; i++)
             {
-                G.Children.Remove(rs[i]);
+                //G.Children.Remove(rs[i]);
             }
             for (int i = 0; i < Tps.Count; i += 2)
             {
@@ -300,29 +288,56 @@ namespace PDFTOWORD
                 //eps.Add(ep);
             }
 
-            for (int i = 0; i < Tps.Count; i += 2)
-            {
-                if (i + 1 < Tps.Count)
-                {
-                    Rec r = new Rec
-                    {
-                        Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0)),
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        VerticalAlignment = VerticalAlignment.Top,
-                        Stroke = new SolidColorBrush(Colors.Red),
-                        StrokeThickness = 3,
-                        Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, 0, 0),
-                        Width = (Tps[i + 1].X - Tps[i].X) * Img.ActualWidth,
-                        Height = (Tps[i + 1].Y - Tps[i].Y) * Img.ActualHeight
-                    };
-                    G.Children.Add(r);
-                    Panel.SetZIndex(r, 2);
-                    rs.Add(r);
+            //for (int i = 0; i < Tps.Count; i += 2)
+            //{
+            //    if (i + 1 < Tps.Count)
+            //    {
+            //        Rec r = new Rec
+            //        {
+            //            Fill = new SolidColorBrush(System.Windows.Media.Color.FromArgb(0, 0, 0, 0)),
+            //            HorizontalAlignment = HorizontalAlignment.Left,
+            //            VerticalAlignment = VerticalAlignment.Top,
+            //            Stroke = new SolidColorBrush(Colors.Red),
+            //            StrokeThickness = 3,
+            //            Margin = new Thickness(Tps[i].X * Img.ActualWidth, Tps[i].Y * Img.ActualHeight, 0, 0),
+            //            Width = (Tps[i + 1].X - Tps[i].X) * Img.ActualWidth,
+            //            Height = (Tps[i + 1].Y - Tps[i].Y) * Img.ActualHeight
+            //        };
+            //        G.Children.Add(r);
+            //        Panel.SetZIndex(r, 2);
+            //        rs.Add(r);
 
-                }
-            }
+            //    }
+            //}
         }
 
+        private void GMain_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+
+        }
+
+        private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            try
+            {
+                if (e.Delta > 0)
+                {
+                    if (PgIndex > 0)
+                    {
+
+                        PgIndex -= 1;
+                    }
+                }
+                else
+                {
+                    PgIndex += 1;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+        }
     }
 
 }
