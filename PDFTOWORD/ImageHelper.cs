@@ -81,10 +81,7 @@ namespace PDFTOWORD
     /// </summary>
     public class TPoint
     {
-        public TPoint() { }
-
-
-        public TPoint(double x, double y)
+        public TPoint(double x, double y,int pgIndex)
         {
             
             X = x;
@@ -99,6 +96,8 @@ namespace PDFTOWORD
         /// Y轴的比例
         /// </summary>
         public double Y { get; }
+
+        public int PgIndex { get; set; }
 
     }
 }

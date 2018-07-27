@@ -12,8 +12,8 @@ namespace PDFTOWORD
     {
         public static void WriteWord(string file_doc, string dir_pic)
         {
-            Console.WriteLine(file_doc);
-            Console.WriteLine(dir_pic);
+            //Console.WriteLine(file_doc);
+            //Console.WriteLine(dir_pic);
 
             DirectoryInfo info = new DirectoryInfo(dir_pic);
             var f = info.GetFiles();

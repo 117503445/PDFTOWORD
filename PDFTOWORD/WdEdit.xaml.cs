@@ -26,18 +26,7 @@ namespace PDFTOWORD
     public partial class WdEdit : Window
     {
 
-        /// <summary>
-        /// 释放Bitmap
-        /// </summary>
-        ~WdEdit()
-        {
-            bitmap?.Dispose();
-        }
-        /// <summary>
-        /// 要操作的bitmap
-        /// </summary>
-        private Bitmap bitmap;
-        private System.Drawing.Size bpSize;
+
         /// <summary>
         /// 维护点集
         /// </summary>
@@ -64,8 +53,6 @@ namespace PDFTOWORD
         }
         private void SaveTps()
         {
-            Console.WriteLine("Save");
-            //File.Create(Dir_tpsTXT);
             string s = "";
             foreach (var item in Tps)
             {
@@ -83,30 +70,15 @@ namespace PDFTOWORD
             Dir_WorkPlace = dir_WorkPlace;
 
         }
-
+        int maxPgIndex = 0;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            string file_img = Dir_WorkPlace + "pdf.jpg";
-            //bitmap = new Bitmap(file_img);
-            //MemoryStream ms = new MemoryStream();
+            DirectoryInfo info = new DirectoryInfo(Dir_WorkPlace + "temp");
+            var f = info.GetFiles();
 
-            //bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-            //byte[] bytes = ms.GetBuffer();  //byte[]   bytes=   ms.ToArray(); 这两句都可以
-            //ms.Close();
-            ////Convert it to BitmapImage
-            //BitmapImage image = new BitmapImage();
-            //image.BeginInit();
-            //image.StreamSource = new MemoryStream(bytes);
-            //image.EndInit();
-            //Img.Source = image;
+            maxPgIndex = (from x in f orderby int.Parse(x.Name.Substring(0, x.Name.Length - 4)) select int.Parse(x.Name.Substring(0, x.Name.Length - 4))).ToList().Last();//不然11.jpg在2.jpg前面
 
-            //bpSize = bitmap.Size;
 
-            //Img.Source = new BitmapImage(new Uri(file_img, UriKind.Absolute));//strImagePath 就绝对路径
-
-            //ms.Dispose();
-            //Img.Source = GetImage(file_img);
-            Console.WriteLine(1);
             if (File.Exists(File_tpstxt))
             {
                 Tps = LoadTps();
@@ -119,9 +91,8 @@ namespace PDFTOWORD
             Console.WriteLine(2);
             UpdateImg();
         }
-        int PgIndex { get { return pgIndex; } set { UpdateImg(); pgIndex = value; } }
+        int PgIndex { get { return pgIndex; } set { pgIndex = value; UpdateImg(); } }
         int pgIndex;
-        BitmapImage oldimg;
         private void UpdateImg()
         {
             Img.Source = null;
@@ -150,6 +121,28 @@ namespace PDFTOWORD
 
         private void Img_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (e.RightButton == MouseButtonState.Released)//左键
+            {
+                double x = e.GetPosition(Img).X / Img.ActualWidth;
+                double y = e.GetPosition(Img).Y / Img.ActualHeight;
+
+                bool isLegal = true;
+                if (Tps.Count > 0)
+                {
+                    isLegal = x > Tps.Last().X && y > Tps.Last().Y;
+                }
+
+                if (Tps.Count % 2 == 0 || (isLegal))
+                {
+                    Tps.Add(new TPoint(x, y,pgIndex));
+                }
+            }
+            else
+            {//右键
+                RemoveAPoint();
+            }
+
+            UpdateEpsAndRs();
 
         }
         private async void BtnSave_Click(object sender, RoutedEventArgs e)
@@ -170,7 +163,8 @@ namespace PDFTOWORD
                 {
                     BtnSave.IsEnabled = false;
                 });
-                var bs = ImageHelper.EditImages(bitmap, Tps.ToList());
+                var bs = ImageHelper.EditImages(null, Tps.ToList());//!!!!!!!!!!!!!!!!!!!!!!!!
+
                 string dir_pic = Dir_WorkPlace + @"pics\";
                 if (Directory.Exists(dir_pic))
                 {
@@ -212,38 +206,14 @@ namespace PDFTOWORD
         {
             RemoveAPoint();
         }
-        private void G_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            //if (e.RightButton == MouseButtonState.Released)//左键
-            //{
-            //    double x = e.GetPosition(Img).X / Img.ActualWidth;
-            //    double y = e.GetPosition(Img).Y / Img.ActualHeight;
 
-            //    bool isLegal = true;
-            //    if (Tps.Count > 0)
-            //    {
-            //        isLegal = x > Tps.Last().X && y > Tps.Last().Y;
-            //    }
-
-            //    if (Tps.Count % 2 == 0 || (isLegal))
-            //    {
-            //        Tps.Add(new TPoint(x, y));
-            //    }
-            //}
-            //else
-            //{//右键
-            //    RemoveAPoint();
-            //}
-
-            //UpdateEpsAndRs();
-        }
         private void G_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             UpdateEpsAndRs();
         }
         private void Window_Closed(object sender, EventArgs e)
         {
-            bitmap?.Dispose();
+
         }
 
         private void RemoveAPoint()
@@ -318,26 +288,26 @@ namespace PDFTOWORD
 
         private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            try
-            {
-                if (e.Delta > 0)
-                {
-                    if (PgIndex > 0)
-                    {
 
-                        PgIndex -= 1;
-                    }
-                }
-                else
+            if (e.Delta > 0)
+            {
+                if (PgIndex > 0)
                 {
+
+                    PgIndex -= 1;
+                }
+            }
+            else
+            {
+                if (pgIndex < maxPgIndex)
+                {
+
                     PgIndex += 1;
                 }
             }
-            catch (Exception)
-            {
-            }
-
         }
-    }
 
+    }
 }
+
+
