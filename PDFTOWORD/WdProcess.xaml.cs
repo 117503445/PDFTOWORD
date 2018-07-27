@@ -39,7 +39,7 @@ namespace PDFTOWORD
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在处理", false);
+            TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在处理");
             FileInfo fileInfo = new FileInfo(Dir_SourcePdf);
             PdfSize = fileInfo.Length;
             Dir_WorkPlace = App.Dir_File_PDF + $"{fileInfo.Name.Substring(0, fileInfo.Name.Length - 4)}-{PdfSize}/";
@@ -52,7 +52,7 @@ namespace PDFTOWORD
                     List<Bitmap> pics = new List<Bitmap>();
                     for (int i = 0; i < pdf.PageCount; i++)
                     {
-                        TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, $"{i + 1}/{pdf.PageCount}", false); });
+                        TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, $"{i + 1}/{pdf.PageCount}"); });
                         var p = pdf.GetPageImage(i, 150);
                         pics.Add(p);
                         string dir_temp = Dir_WorkPlace + "temp/";
@@ -74,15 +74,13 @@ namespace PDFTOWORD
             }
             BtnEdit.IsEnabled = true;
             BtnEdit.Content = "开始编辑";
-            TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成", false);
+            TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "预处理完成");
 
         }
-        private string GetTbInfoText(string dir_SourcePdf, string strHandle, bool IsBuilt)
+        private string GetTbInfoText(string dir_SourcePdf, string strHandle)
         {
             return $"正在处理的PDF文件路径:{dir_SourcePdf + NewLine}" +
              $"预处理状态:{(strHandle) + NewLine}";
-            //TODO 修改参数
-            //$"是否生成过了DOC:{(IsBuilt ? "生成过了" : "未生成")}";
         }
 
         private void BtnEdit_Click(object sender, RoutedEventArgs e)
