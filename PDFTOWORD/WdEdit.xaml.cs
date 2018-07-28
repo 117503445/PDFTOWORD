@@ -400,6 +400,24 @@ namespace PDFTOWORD
 
             UpdateEpsAndRs();
         }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Left||e.Key==Key.Up)
+            {
+                if (PgIndex > 0)
+                {
+                    PgIndex -= 1;
+                }
+            }
+            else if (e.Key == Key.Right||e.Key==Key.Down)
+            {
+                if (pgIndex < maxPgIndex)
+                {
+                    PgIndex += 1;
+                }
+            }
+        }
     }
 }
 

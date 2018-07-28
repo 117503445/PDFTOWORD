@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PDFTOWORD"
         mc:Ignorable="d"
-        Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded"  MouseWheel="Window_MouseWheel">
+        Title="WdEdit" Height="450" Width="800" Loaded="Window_Loaded"  MouseWheel="Window_MouseWheel" KeyDown="Window_KeyDown">
     <Grid Name="GMain" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="50"/>
