@@ -98,6 +98,9 @@
     <Compile Include="WdProcess.xaml.cs">
       <DependentUpon>WdProcess.xaml</DependentUpon>
     </Compile>
+    <Compile Include="WdSetting.xaml.cs">
+      <DependentUpon>WdSetting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="WordHelper.cs" />
     <Compile Include="Work.cs" />
     <Page Include="WdEdit.xaml">
@@ -117,6 +120,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="WdProcess.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="WdSetting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

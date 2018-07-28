@@ -1,0 +1,16 @@
+﻿<Window x:Class="PDFTOWORD.WdSetting"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PDFTOWORD"
+        mc:Ignorable="d"
+        Title="WdSetting" Height="450" Width="800" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Canvas>
+        <TextBlock Name="TbInfoSharpness" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Text="清晰度设置(默认150,数值越大,越清晰,处理时间越慢)" Canvas.Left="31" Canvas.Top="60">
+
+        </TextBlock>
+        <TextBox Name="TbSharpness" Height="23" TextWrapping="Wrap"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="31" Canvas.Top="96" Width="57" TextChanged="TbSharpness_TextChanged"/>
+        <TextBlock TextWrapping="Wrap" Text="关于:开发者117503445,代码开源于https://github.com/117503445/PDFTOWORD,遵循GPL-3.0,软件版本1.2" Canvas.Left="31" Canvas.Top="344"/>
+    </Canvas>
+</Window>

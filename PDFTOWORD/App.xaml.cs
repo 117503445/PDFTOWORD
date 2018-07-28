@@ -22,6 +22,9 @@ namespace PDFTOWORD
         public static string Dir_Desktop { get; set; } = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)+"/";
         public static string dir_LstPaths = Dir_File + "LstPaths.xml";
         public static BindingList<string> LstPaths { get; set; }
+
+        public static WdSetting WdSetting = new WdSetting();
+
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             Directory.CreateDirectory(Dir_File);

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -49,26 +48,29 @@ namespace PDFTOWORD
                 await Task.Run(() =>
                 {
                     var pdf = PDFFile.Open(Dir_SourcePdf);
-                    List<Bitmap> pics = new List<Bitmap>();
+                    //List<Bitmap> pics = new List<Bitmap>();
+                    string dir_temp = Dir_WorkPlace + "temp/";
+                    Directory.CreateDirectory(dir_temp);
+
                     for (int i = 0; i < pdf.PageCount; i++)
                     {
                         TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, $"{i + 1}/{pdf.PageCount}"); });
-                        var p = pdf.GetPageImage(i, 150);
-                        pics.Add(p);
-                        string dir_temp = Dir_WorkPlace + "temp/";
-                        Directory.CreateDirectory(dir_temp);
+                        var p = pdf.GetPageImage(i, App.WdSetting.Sharpness);
+                        //Console.WriteLine(App.WdSetting.Sharpness);
+                        //pics.Add(p);
                         p.Save($@"{dir_temp}{i}.jpg");
+                        p.Dispose();
                     }
                     //TbInfo.Dispatcher.Invoke(() => { TbInfo.Text = GetTbInfoText(Dir_SourcePdf, "正在合成图片,即将完成", false); });
                     // var p1 = ImageHelper.CombineImages(pics);
-                    var p1 = new Bitmap(1,1);
+                    var p1 = new Bitmap(1, 1);
                     using (FileStream stream = File.Create($@"{Dir_WorkPlace}pdf.jpg"))
                     {
                         p1.Save(stream, System.Drawing.Imaging.ImageFormat.Bmp);
                     }//使用流进行保存,防止大小宽度超过65536导致报错
 
                     p1.Dispose();
-                    pics.ForEach(item => item.Dispose());
+                   // pics.ForEach(item => item.Dispose());
 
                 });
             }

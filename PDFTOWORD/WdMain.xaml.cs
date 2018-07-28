@@ -69,5 +69,17 @@ namespace PDFTOWORD
             WdProcess wdProcess = new WdProcess(dir_pdf);
             wdProcess.Show();
         }
+
+        private void BtnSetting_Click(object sender, RoutedEventArgs e)
+        {
+
+                App.WdSetting.Show();
+
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            App.Current.Shutdown();
+        }
     }
 }
