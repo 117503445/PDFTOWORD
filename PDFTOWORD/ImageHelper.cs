@@ -83,6 +83,26 @@ namespace PDFTOWORD
     {
         public TPoint(double x, double y,int pgIndex)
         {
+            if (x<0)
+            {
+                TLib.Software.Logger.Write($"X过小,X={x}");
+                x = 0;
+            }
+            if (x>1)
+            {
+                TLib.Software.Logger.Write($"X过大,X={x}");
+                x = 1;
+            }
+            if (y<0)
+            {
+                TLib.Software.Logger.Write($"Y过小,Y={y}");
+                y = 0;
+            }
+            if (y>1)
+            {
+                TLib.Software.Logger.Write($"Y过大,Y={y}");
+                y = 1;
+            }
             X = x;
             Y = y;
             PgIndex = pgIndex;

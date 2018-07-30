@@ -102,7 +102,6 @@
       <DependentUpon>WdSetting.xaml</DependentUpon>
     </Compile>
     <Compile Include="WordHelper.cs" />
-    <Compile Include="Work.cs" />
     <Page Include="WdEdit.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
