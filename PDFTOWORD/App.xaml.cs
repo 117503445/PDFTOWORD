@@ -40,6 +40,7 @@ namespace PDFTOWORD
             }
 #if !DEBUG
             WPF_ExpectionHandler.HandleExpection(Current, AppDomain.CurrentDomain);
+            WPF_ExpectionHandler.ExpectionCatched += (s,arg) => { MessageBox.Show("翻车了,去找齐浩天,把Logger.xml发给他"); };
 #endif
         }
         private void Application_Exit(object sender, ExitEventArgs e)

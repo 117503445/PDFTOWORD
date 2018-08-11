@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using static System.Math;
 namespace PDFTOWORD
 {
     public class ImageHelper
@@ -70,7 +70,7 @@ namespace PDFTOWORD
             List<Bitmap> bs = new List<Bitmap>();
             for (int i = 0; i < ps.Count; i += 2)
             {
-                bs.Add(p.Clone(new Rectangle((int)(ps[i].X * p.Width), (int)(ps[i].Y * p.Height), (int)((ps[i + 1].X - ps[i].X) * p.Width), (int)((ps[i + 1].Y - ps[i].Y) * p.Height)), System.Drawing.Imaging.PixelFormat.Undefined));
+                bs.Add(p.Clone(new Rectangle((int)(Min(ps[i].X, ps[i+1].X)  * p.Width), (int)(Min(ps[i].Y, ps[i+1].Y) * p.Height), (int)(Abs((ps[i + 1].X - ps[i].X)) * p.Width), (int)(Abs((ps[i + 1].Y - ps[i].Y)) * p.Height)), System.Drawing.Imaging.PixelFormat.Undefined));
             }
             return bs;
             //Bitmap b = bitmap.Clone(new Rectangle(x1, y1, x2 - x1, y2 - y1), System.Drawing.Imaging.PixelFormat.Undefined);

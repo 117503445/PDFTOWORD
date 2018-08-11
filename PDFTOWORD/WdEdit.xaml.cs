@@ -309,9 +309,9 @@ namespace PDFTOWORD
                         VerticalAlignment = VerticalAlignment.Top,
                         Stroke = new SolidColorBrush(Colors.Red),
                         StrokeThickness = 3,
-                        Margin = new Thickness(tps[i].X * Img.ActualWidth - 2, tps[i].Y * Img.ActualHeight - 2, 0, 0),
-                        Width = (tps[i + 1].X - tps[i].X) * Img.ActualWidth + 3,
-                        Height = (tps[i + 1].Y - tps[i].Y) * Img.ActualHeight + 3
+                        Margin = new Thickness(Math.Min(tps[i].X, tps[i+1].X)  * Img.ActualWidth - 2, Math.Min(tps[i].Y, tps[i+1].Y) * Img.ActualHeight - 2, 0, 0),
+                        Width = Math.Abs((tps[i + 1].X - tps[i].X)) * Img.ActualWidth + 3,
+                        Height = Math.Abs((tps[i + 1].Y - tps[i].Y)) * Img.ActualHeight + 3
                     };
                     G.Children.Add(r);
                     Panel.SetZIndex(r, 2);
@@ -386,7 +386,7 @@ namespace PDFTOWORD
                 {
                     isLegal = x > Tps.Last().X && y > Tps.Last().Y;
                 }
-                //isLegal = true;
+                isLegal = true;
                 if (Tps.Count % 2 == 0 || (isLegal))
                 {
                     //Console.WriteLine(pgIndex);
@@ -403,14 +403,14 @@ namespace PDFTOWORD
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Left||e.Key==Key.Up)
+            if (e.Key == Key.Left || e.Key == Key.Up)
             {
                 if (PgIndex > 0)
                 {
                     PgIndex -= 1;
                 }
             }
-            else if (e.Key == Key.Right||e.Key==Key.Down)
+            else if (e.Key == Key.Right || e.Key == Key.Down)
             {
                 if (pgIndex < maxPgIndex)
                 {
