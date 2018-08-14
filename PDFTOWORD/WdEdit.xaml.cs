@@ -309,7 +309,7 @@ namespace PDFTOWORD
                         VerticalAlignment = VerticalAlignment.Top,
                         Stroke = new SolidColorBrush(Colors.Red),
                         StrokeThickness = 3,
-                        Margin = new Thickness(Math.Min(tps[i].X, tps[i+1].X)  * Img.ActualWidth - 2, Math.Min(tps[i].Y, tps[i+1].Y) * Img.ActualHeight - 2, 0, 0),
+                        Margin = new Thickness(Math.Min(tps[i].X, tps[i + 1].X) * Img.ActualWidth - 2, Math.Min(tps[i].Y, tps[i + 1].Y) * Img.ActualHeight - 2, 0, 0),
                         Width = Math.Abs((tps[i + 1].X - tps[i].X)) * Img.ActualWidth + 3,
                         Height = Math.Abs((tps[i + 1].Y - tps[i].Y)) * Img.ActualHeight + 3
                     };
@@ -384,9 +384,9 @@ namespace PDFTOWORD
                 bool isLegal = true;
                 if (Tps.Count > 0)
                 {
-                    isLegal = x > Tps.Last().X && y > Tps.Last().Y;
+                    isLegal = x != Tps.Last().X && y != Tps.Last().Y;
                 }
-                isLegal = true;
+                //isLegal = true;
                 if (Tps.Count % 2 == 0 || (isLegal))
                 {
                     //Console.WriteLine(pgIndex);
