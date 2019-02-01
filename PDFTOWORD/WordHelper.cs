@@ -58,7 +58,7 @@ namespace PDFTOWORD
             ref oMissing, ref replace,
             ref oMissing, ref oMissing,
             ref oMissing, ref oMissing);
-            object format = Word.WdSaveFormat.wdFormatDocument;
+            object format = Word.WdSaveFormat.wdFormatDocumentDefault;
             wordDoc.SaveAs(ref path, ref format, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing, ref Nothing);
             wordDoc.Close(ref Nothing, ref Nothing, ref Nothing);
             //关闭wordApp组件对象
