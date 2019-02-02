@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,36 @@ namespace Demo3
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Img.Source= GetImage(@"C:\Users\117503445\Desktop\0.jpg");
+        }
+        public static BitmapImage GetImage(string imagePath)
+        {
+            BitmapImage bitmap = new BitmapImage();
+
+            if (File.Exists(imagePath))
+            {
+                bitmap.BeginInit();
+                bitmap.CacheOption = BitmapCacheOption.OnLoad;
+
+                using (Stream ms = new MemoryStream(File.ReadAllBytes(imagePath)))
+                {
+                    bitmap.StreamSource = ms;
+                    bitmap.EndInit();
+                    bitmap.Freeze();
+                }
+            }
+
+            return bitmap;
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Console.WriteLine(ActualHeight);
+            Console.WriteLine(ActualWidth);
         }
     }
 }

@@ -5,8 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Demo3"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Demo3" Height="787" Width="1129" Loaded="Window_Loaded">
+    <Grid Name="GMain" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel>
+            <Button Name="BtnSave" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE792;" FontFamily="Segoe MDL2 Assets" FontSize="21"></Button>
+            <Button Name="BtnUndo" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE7A7;" FontFamily="Segoe MDL2 Assets" FontSize="21" ></Button>
+            <Button Name="BtnDelete" Height="50" VerticalContentAlignment="Center" VerticalAlignment="Top" Content="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="21"  ></Button>
+
+
+            <TextBlock Name="TbInfo" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center">运行中</TextBlock>
+            <TextBlock Name="TbPgInfo" TextWrapping="Wrap" VerticalAlignment="Center" HorizontalAlignment="Center">1/3</TextBlock>
+        </StackPanel>
+        <Grid Name="G" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Cross" >
+            <Image Name="Img"  ScrollViewer.VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Center"  VerticalAlignment="Center" />
+        </Grid>
+
+
     </Grid>
 </Window>
