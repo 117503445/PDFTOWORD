@@ -27,7 +27,7 @@ namespace PDFTOWORD
             {
                 Image image = Image.FromFile(pics[i]);
                 DocPicture picture = doc.Sections[0].Paragraphs[0].AppendPicture(image);
-
+                image.Dispose();
                 picture.TextWrappingStyle = TextWrappingStyle.Inline;//设置文字环绕方式
                 doc.Sections[0].Paragraphs[0].AppendText(Environment.NewLine);
             }

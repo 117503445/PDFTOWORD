@@ -107,7 +107,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="TLib">
-      <HintPath>..\PDFTOWORD\DLL\TLib.dll</HintPath>
+      <HintPath>..\..\TLib\TLib\bin\Debug\TLib.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
