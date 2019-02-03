@@ -73,39 +73,52 @@ namespace PDFTOWORD
             Dir_WorkPlace = dir_WorkPlace;
 
         }
+        TLib.Windows.HotKey hotKey_left;
+        TLib.Windows.HotKey hotKey_up;
+        TLib.Windows.HotKey hotKey_right;
+        TLib.Windows.HotKey hotKey_down;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TLib.Windows.HotKey hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Left, this);
-            TLib.Windows.HotKey hotKey_up = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Up, this);
-            TLib.Windows.HotKey hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Right, this);
-            TLib.Windows.HotKey hotKey_down = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Down, this);
+            try
+            {
+                hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Left, this);
+                hotKey_up = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Up, this);
+                hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Right, this);
+                hotKey_down = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Down, this);
 
-            hotKey_left.HotKeyPressed += (key) =>
-            {
-                if (PgIndex > 0)
+                hotKey_left.HotKeyPressed += (key) =>
                 {
-                    PgIndex -= 1;
-                }
-            };
-            hotKey_up.HotKeyPressed += (key) =>
-            {
-                if (PgIndex > 0)
+                    if (PgIndex > 0)
+                    {
+                        PgIndex -= 1;
+                    }
+                };
+                hotKey_up.HotKeyPressed += (key) =>
                 {
-                    PgIndex -= 1;
-                }
-            }; hotKey_right.HotKeyPressed += (key) =>
-            {
-                if (pgIndex < maxPgIndex)
+                    if (PgIndex > 0)
+                    {
+                        PgIndex -= 1;
+                    }
+                }; hotKey_right.HotKeyPressed += (key) =>
                 {
-                    PgIndex += 1;
-                }
-            }; hotKey_down.HotKeyPressed += (key) =>
-            {
-                if (pgIndex < maxPgIndex)
+                    if (pgIndex < maxPgIndex)
+                    {
+                        PgIndex += 1;
+                    }
+                }; hotKey_down.HotKeyPressed += (key) =>
                 {
-                    PgIndex += 1;
-                }
-            };
+                    if (pgIndex < maxPgIndex)
+                    {
+                        PgIndex += 1;
+                    }
+                };
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("在绑定热键的时候失败了,请关闭已打开的窗口");
+            }
+
 
             DirectoryInfo info = new DirectoryInfo(Dir_WorkPlace + "temp");
             var f = info.GetFiles();
@@ -445,6 +458,22 @@ namespace PDFTOWORD
             else if (e.Key == Key.Right || e.Key == Key.Down)
             {
 
+            }
+        }
+
+        private void Window_Unloaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                hotKey_left.UnregisterHotKey();
+                hotKey_down.UnregisterHotKey();
+                hotKey_right.UnregisterHotKey();
+                hotKey_up.UnregisterHotKey();
+            }
+            catch (Exception)
+            {
+
+                //throw;
             }
         }
     }
