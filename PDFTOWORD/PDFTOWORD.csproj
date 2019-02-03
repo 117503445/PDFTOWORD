@@ -78,6 +78,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -87,8 +88,9 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="TLib">
-      <HintPath>DLL\TLib.dll</HintPath>
+    <Reference Include="TLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\TLib\TLib\bin\Debug\TLib.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
@@ -170,8 +172,6 @@
   <ItemGroup>
     <Content Include="DLL\Microsoft.Office.Interop.Word.dll" />
     <Content Include="DLL\O2S.Components.PDFRender4NET.dll" />
-    <Content Include="DLL\TLib.dll" />
-    <Content Include="DLL\TLib.pdb" />
     <Resource Include="Help\PDFTOWORD.ico" />
     <Resource Include="Help\XY轴.txt" />
   </ItemGroup>

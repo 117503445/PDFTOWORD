@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,12 +14,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using System.IO;
 using System.Windows.Threading;
 using TLib.Software;
-using System.Collections.ObjectModel;
 using TLib.UI.WPF_MessageBox;
 using Rec = System.Windows.Shapes.Rectangle;
+
 namespace PDFTOWORD
 {
     /// <summary>
@@ -74,6 +75,38 @@ namespace PDFTOWORD
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            TLib.Windows.HotKey hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Left, this);
+            TLib.Windows.HotKey hotKey_up = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Up, this);
+            TLib.Windows.HotKey hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Right, this);
+            TLib.Windows.HotKey hotKey_down = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Down, this);
+
+            hotKey_left.HotKeyPressed += (key) =>
+            {
+                if (PgIndex > 0)
+                {
+                    PgIndex -= 1;
+                }
+            };
+            hotKey_up.HotKeyPressed += (key) =>
+            {
+                if (PgIndex > 0)
+                {
+                    PgIndex -= 1;
+                }
+            }; hotKey_right.HotKeyPressed += (key) =>
+            {
+                if (pgIndex < maxPgIndex)
+                {
+                    PgIndex += 1;
+                }
+            }; hotKey_down.HotKeyPressed += (key) =>
+            {
+                if (pgIndex < maxPgIndex)
+                {
+                    PgIndex += 1;
+                }
+            };
+
             DirectoryInfo info = new DirectoryInfo(Dir_WorkPlace + "temp");
             var f = info.GetFiles();
             maxPgIndex = (from x in f orderby int.Parse(x.Name.Substring(0, x.Name.Length - 4)) select int.Parse(x.Name.Substring(0, x.Name.Length - 4))).ToList().Last();
@@ -403,19 +436,15 @@ namespace PDFTOWORD
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
+            Console.WriteLine("Key_Down");
+
             if (e.Key == Key.Left || e.Key == Key.Up)
             {
-                if (PgIndex > 0)
-                {
-                    PgIndex -= 1;
-                }
+
             }
             else if (e.Key == Key.Right || e.Key == Key.Down)
             {
-                if (pgIndex < maxPgIndex)
-                {
-                    PgIndex += 1;
-                }
+
             }
         }
     }
