@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using static System.Math;
 namespace PDFTOWORD
 {
@@ -70,7 +71,15 @@ namespace PDFTOWORD
             List<Bitmap> bs = new List<Bitmap>();
             for (int i = 0; i < ps.Count; i += 2)
             {
-                bs.Add(p.Clone(new Rectangle((int)(Min(ps[i].X, ps[i+1].X)  * p.Width), (int)(Min(ps[i].Y, ps[i+1].Y) * p.Height), (int)(Abs((ps[i + 1].X - ps[i].X)) * p.Width), (int)(Abs((ps[i + 1].Y - ps[i].Y)) * p.Height)), System.Drawing.Imaging.PixelFormat.Undefined));
+                try
+                {
+                    bs.Add(p.Clone(new Rectangle((int)(Min(ps[i].X, ps[i + 1].X) * p.Width), (int)(Min(ps[i].Y, ps[i + 1].Y) * p.Height), (int)(Abs((ps[i + 1].X - ps[i].X)) * p.Width), (int)(Abs((ps[i + 1].Y - ps[i].Y)) * p.Height)), System.Drawing.Imaging.PixelFormat.Undefined));
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("截取图片的时候出现了问题,可能是2个点重叠了/在同一直线上以至于没有围成矩形,这2个点将被省略,以下是错误信息\n" + e.Message);
+                }
+
             }
             return bs;
             //Bitmap b = bitmap.Clone(new Rectangle(x1, y1, x2 - x1, y2 - y1), System.Drawing.Imaging.PixelFormat.Undefined);
@@ -81,24 +90,24 @@ namespace PDFTOWORD
     /// </summary>
     public class TPoint
     {
-        public TPoint(double x, double y,int pgIndex)
+        public TPoint(double x, double y, int pgIndex)
         {
-            if (x<0)
+            if (x < 0)
             {
                 TLib.Software.Logger.Write($"X过小,X={x}");
                 x = 0;
             }
-            if (x>1)
+            if (x > 1)
             {
                 TLib.Software.Logger.Write($"X过大,X={x}");
                 x = 1;
             }
-            if (y<0)
+            if (y < 0)
             {
                 TLib.Software.Logger.Write($"Y过小,Y={y}");
                 y = 0;
             }
-            if (y>1)
+            if (y > 1)
             {
                 TLib.Software.Logger.Write($"Y过大,Y={y}");
                 y = 1;
