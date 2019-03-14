@@ -74,43 +74,25 @@ namespace PDFTOWORD
 
         }
         TLib.Windows.HotKey hotKey_left;
-        TLib.Windows.HotKey hotKey_up;
+
         TLib.Windows.HotKey hotKey_right;
-        TLib.Windows.HotKey hotKey_down;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Left, this);
-                hotKey_up = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Up, this);
-                hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Right, this);
-                hotKey_down = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.Down, this);
+                hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.A, this);
+
+                hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.D, this);
+
 
                 hotKey_left.HotKeyPressed += (key) =>
                 {
-                    if (PgIndex > 0)
-                    {
-                        PgIndex -= 1;
-                    }
+                    Scv.ScrollToVerticalOffset(Scv.VerticalOffset - 30);
                 };
-                hotKey_up.HotKeyPressed += (key) =>
+                hotKey_right.HotKeyPressed += (key) =>
                 {
-                    if (PgIndex > 0)
-                    {
-                        PgIndex -= 1;
-                    }
-                }; hotKey_right.HotKeyPressed += (key) =>
-                {
-                    if (pgIndex < maxPgIndex)
-                    {
-                        PgIndex += 1;
-                    }
-                }; hotKey_down.HotKeyPressed += (key) =>
-                {
-                    if (pgIndex < maxPgIndex)
-                    {
-                        PgIndex += 1;
-                    }
+                    Scv.ScrollToVerticalOffset(Scv.VerticalOffset + 30);
                 };
             }
             catch (Exception)
@@ -270,23 +252,6 @@ namespace PDFTOWORD
         private void BtnUndo_Click(object sender, RoutedEventArgs e)
         {
             RemoveAPoint();
-        }
-        private void Window_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (e.Delta > 0)
-            {
-                if (PgIndex > 0)
-                {
-                    PgIndex -= 1;
-                }
-            }
-            else
-            {
-                if (pgIndex < maxPgIndex)
-                {
-                    PgIndex += 1;
-                }
-            }
         }
         private void G_SizeChanged(object sender, SizeChangedEventArgs e)
         {
@@ -466,14 +431,31 @@ namespace PDFTOWORD
             try
             {
                 hotKey_left.UnregisterHotKey();
-                hotKey_down.UnregisterHotKey();
                 hotKey_right.UnregisterHotKey();
-                hotKey_up.UnregisterHotKey();
             }
             catch (Exception)
             {
 
                 //throw;
+            }
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            e.Handled = true;
+            if (e.Delta > 0)
+            {
+                if (PgIndex > 0)
+                {
+                    PgIndex -= 1;
+                }
+            }
+            else
+            {
+                if (pgIndex < maxPgIndex)
+                {
+                    PgIndex += 1;
+                }
             }
         }
     }

@@ -11,6 +11,6 @@
 
         </TextBlock>
         <TextBox Name="TbSharpness" Height="23" TextWrapping="Wrap"  HorizontalAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" VerticalContentAlignment="Center" Canvas.Left="31" Canvas.Top="96" Width="57" TextChanged="TbSharpness_TextChanged"/>
-        <TextBlock TextWrapping="Wrap" Text="关于:开发者117503445,代码开源于 https://github.com/117503445/PDFTOWORD ,遵循GNU/GPL3.0,软件版本2.1.3" Canvas.Left="31" Canvas.Top="344"/>
+        <TextBlock TextWrapping="Wrap" Text="关于:开发者117503445,代码开源于 https://github.com/117503445/PDFTOWORD ,遵循GNU/GPL3.0,软件版本2.2" Canvas.Left="31" Canvas.Top="344"/>
     </Canvas>
 </Window>
