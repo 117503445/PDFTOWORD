@@ -23,15 +23,16 @@ namespace PDFTOWORD
         {
             InitializeComponent();
             TLib.Software.Serializer serializer = new TLib.Software.Serializer(this, App.Dir_File + "Setting.xml", new List<string>() { "Sharpness" });
+            TbAbout.Text += System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
         /// <summary>
         /// 清晰度
         /// </summary>
-        public  int Sharpness { get; set; } = 150;
+        public int Sharpness { get; set; } = 150;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
+
             TbSharpness.Text = Sharpness.ToString();
         }
         private void TbSharpness_TextChanged(object sender, TextChangedEventArgs e)

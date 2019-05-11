@@ -24,10 +24,14 @@ namespace PDFTOWORD
         public WdMain()
         {
             InitializeComponent();
+#if DEBUG
+            Title += " Debug";
+#endif
         }
 
         private void BtnExplorer_Click(object sender, RoutedEventArgs e)
         {
+            throw new Exception("Error");
             var openFileDialog = new Microsoft.Win32.OpenFileDialog()
             {
                 Filter = "Portable Document Format|*.pdf"
