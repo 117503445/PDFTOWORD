@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using TLib.Software;
-using TLib.UI.WPF_MessageBox;
+using TLib.UI.WpfMessageBox;
 using Rec = System.Windows.Shapes.Rectangle;
 
 namespace PDFTOWORD
@@ -81,9 +81,9 @@ namespace PDFTOWORD
         {
             try
             {
-                hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.A, this);
+                hotKey_left = new TLib.Windows.HotKey(ModifierKeys.None, Key.A);
 
-                hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, System.Windows.Forms.Keys.D, this);
+                hotKey_right = new TLib.Windows.HotKey(ModifierKeys.None, Key.D);
 
 
                 hotKey_left.HotKeyPressed += (key) =>

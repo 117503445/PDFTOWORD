@@ -22,7 +22,7 @@ namespace PDFTOWORD
         public WdSetting()
         {
             InitializeComponent();
-            TLib.Software.Serializer serializer = new TLib.Software.Serializer(this, App.Dir_File + "Setting.xml", new List<string>() { "Sharpness" });
+            //TLib.Software.Serializer serializer = new TLib.Software.Serializer(this, App.Dir_File + "Setting.xml", new List<string>() { "Sharpness" });
             TbAbout.Text += System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString();
         }
         /// <summary>

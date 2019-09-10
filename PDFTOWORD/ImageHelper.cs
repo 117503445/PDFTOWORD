@@ -94,22 +94,22 @@ namespace PDFTOWORD
         {
             if (x < 0)
             {
-                TLib.Software.Logger.Write($"X过小,X={x}");
+                TLib.Software.Logger.WriteLine($"X过小,X={x}");
                 x = 0;
             }
             if (x > 1)
             {
-                TLib.Software.Logger.Write($"X过大,X={x}");
+                TLib.Software.Logger.WriteLine($"X过大,X={x}");
                 x = 1;
             }
             if (y < 0)
             {
-                TLib.Software.Logger.Write($"Y过小,Y={y}");
+                TLib.Software.Logger.WriteLine($"Y过小,Y={y}");
                 y = 0;
             }
             if (y > 1)
             {
-                TLib.Software.Logger.Write($"Y过大,Y={y}");
+                TLib.Software.Logger.WriteLine($"Y过大,Y={y}");
                 y = 1;
             }
             X = x;

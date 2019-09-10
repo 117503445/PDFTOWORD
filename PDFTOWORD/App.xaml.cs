@@ -32,7 +32,7 @@ namespace PDFTOWORD
 
             if (File.Exists(dir_LstPaths))
             {
-                LstPaths = SerializeHelper.Load<BindingList<string>>(dir_LstPaths);
+                //LstPaths = SerializeHelper.Load<BindingList<string>>(dir_LstPaths);
             }
             else
             {
@@ -45,7 +45,7 @@ namespace PDFTOWORD
         }
         private void Application_Exit(object sender, ExitEventArgs e)
         {
-            SerializeHelper.Save(LstPaths, dir_LstPaths);
+            //SerializeHelper.Save(LstPaths, dir_LstPaths);
         }
     }
 }
