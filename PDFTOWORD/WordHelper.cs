@@ -10,7 +10,7 @@ using Word = Microsoft.Office.Interop.Word;
 
 namespace PDFTOWORD
 {
-    class WordHelper
+    public static class WordHelper
     {
         public static void WriteWord(string file_doc, string dir_pic)
         {
